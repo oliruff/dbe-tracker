@@ -9,16 +9,136 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      contracts: {
+        Row: {
+          contract_number: string
+          created_at: string
+          created_by: string
+          dbe_percentage: number | null
+          id: string
+          original_amount: number
+          prime_contractor: string
+          tad_project_number: string
+          updated_at: string
+        }
+        Insert: {
+          contract_number: string
+          created_at?: string
+          created_by: string
+          dbe_percentage?: number | null
+          id?: string
+          original_amount: number
+          prime_contractor: string
+          tad_project_number: string
+          updated_at?: string
+        }
+        Update: {
+          contract_number?: string
+          created_at?: string
+          created_by?: string
+          dbe_percentage?: number | null
+          id?: string
+          original_amount?: number
+          prime_contractor?: string
+          tad_project_number?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      subgrants: {
+        Row: {
+          amount: number
+          contract_id: string
+          created_at: string
+          created_by: string
+          dbe_firm_name: string
+          id: string
+          updated_at: string
+          work_type: string
+        }
+        Insert: {
+          amount: number
+          contract_id: string
+          created_at?: string
+          created_by: string
+          dbe_firm_name: string
+          id?: string
+          updated_at?: string
+          work_type: string
+        }
+        Update: {
+          amount?: number
+          contract_id?: string
+          created_at?: string
+          created_by?: string
+          dbe_firm_name?: string
+          id?: string
+          updated_at?: string
+          work_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subgrants_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
