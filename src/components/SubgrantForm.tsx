@@ -76,16 +76,21 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="workType">Type of Work</Label>
-            <Input
-              id="workType"
-              value={formData.workType}
-              onChange={(e) =>
-                setFormData({ ...formData, workType: e.target.value })
-              }
-              className="w-full"
-              required
-            />
+            <Label htmlFor="contractType">Type of Contract</Label>
+              <select
+                id="contractType"
+                value={formData.contractType}
+                onChange={(e) =>
+                  setFormData({ ...formData, contractType: e.target.value })
+                }
+                className="w-full border rounded p-2"
+                required
+              >
+                <option value="">Select a contract type</option>
+                <option value="Subcontract">Subcontract</option>
+                <option value="Supplier">Supplier</option>
+                <option value="Manufacturer">Manufacturer</option>
+            </select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="amount">Amount ($)</Label>
