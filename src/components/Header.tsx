@@ -21,7 +21,7 @@ export const Header = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img 
-            src="/lovable-uploads/fef884b8-f660-4546-a0a4-9c7ee3ce096f.png" 
+            src="/lovable-uploads/tad-logo.png" 
             alt="TDOT Logo" 
             className="h-10 w-auto"
           />
