@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const Header = () => {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/auth");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <header className="w-full bg-white border-b border-gray-200 fixed top-0 z-50">
@@ -31,6 +43,13 @@ export const Header = () => {
             className="text-tdot-gray hover:text-tdot-red transition-colors"
           >
             Reports
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="text-tdot-gray hover:text-tdot-red transition-colors"
+          >
+            Logout
           </Button>
         </nav>
       </div>
