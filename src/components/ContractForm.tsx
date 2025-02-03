@@ -22,17 +22,19 @@ export const ContractForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
       const { data: contract, error } = await supabase
         .from("contracts")
-        .insert([
-          {
-            tad_project_number: formData.tadProjectNumber,
-            contract_number: formData.contractNumber,
-            prime_contractor: formData.primeContractor,
-            original_amount: parseFloat(formData.originalAmount),
-            dbe_percentage: parseFloat(formData.dbePercentage),
-          },
-        ])
+        .insert({
+          tad_project_number: formData.tadProjectNumber,
+          contract_number: formData.contractNumber,
+          prime_contractor: formData.primeContractor,
+          original_amount: parseFloat(formData.originalAmount),
+          dbe_percentage: parseFloat(formData.dbePercentage),
+          created_by: user.id
+        })
         .select()
         .single();
 

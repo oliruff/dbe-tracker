@@ -21,14 +21,16 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.from("subgrants").insert([
-        {
-          contract_id: contractId,
-          dbe_firm_name: formData.dbeFirmName,
-          work_type: formData.workType,
-          amount: parseFloat(formData.amount),
-        },
-      ]);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      const { error } = await supabase.from("subgrants").insert({
+        contract_id: contractId,
+        dbe_firm_name: formData.dbeFirmName,
+        work_type: formData.workType,
+        amount: parseFloat(formData.amount),
+        created_by: user.id
+      });
 
       if (error) throw error;
 
