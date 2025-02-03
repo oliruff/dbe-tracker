@@ -113,6 +113,32 @@ export const ContractForm = () => {
                 required
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="awardDate">Contract Award Date</Label>
+              <Input
+                id="awardDate"
+                type="date"
+                value={formData.awardDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, awardDate: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="reportDate">Date Report Prepared</Label>
+              <Input
+                id="reportDate"
+                type="date"
+                value={formData.reportDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, reportDate: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
           </div>
           <div className="flex justify-end">
             <Button 
