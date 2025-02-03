@@ -44,7 +44,7 @@ const Auth = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <img
-            src="/lovable-uploads/fef884b8-f660-4546-a0a4-9c7ee3ce096f.png"
+            src="TADRUFF/dbe-trackmaster/public/lovable-uploads/Aeronautics Division Logo.png"
             alt="TDOT Logo"
             className="mx-auto h-16 w-auto"
           />
