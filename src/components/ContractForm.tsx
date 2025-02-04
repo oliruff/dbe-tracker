@@ -14,7 +14,7 @@ export const ContractForm = () => {
     contractNumber: "",
     primeContractor: "",
     originalAmount: "",
-    dbePercentage: "0.00",
+    dbePercentage: "",
     awardDate: "",
     reportDate: "",
   });
@@ -34,7 +34,7 @@ export const ContractForm = () => {
           contract_number: formData.contractNumber,
           prime_contractor: formData.primeContractor,
           original_amount: parseFloat(formData.originalAmount),
-          dbe_percentage: parseFloat(formData.dbePercentage),
+          dbe_percentage: parseFloat(formData.dbePercentage || "0"),
           created_by: user.id
         })
         .select()
@@ -110,6 +110,22 @@ export const ContractForm = () => {
                 value={formData.originalAmount}
                 onChange={(e) =>
                   setFormData({ ...formData, originalAmount: e.target.value })
+                }
+                className="w-full"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="dbePercentage">DBE Percentage (%)</Label>
+              <Input
+                id="dbePercentage"
+                type="number"
+                step="0.01"
+                min="0"
+                max="100"
+                value={formData.dbePercentage}
+                onChange={(e) =>
+                  setFormData({ ...formData, dbePercentage: e.target.value })
                 }
                 className="w-full"
                 required

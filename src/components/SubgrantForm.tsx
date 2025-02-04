@@ -5,6 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SubgrantFormProps {
   contractId: string;
@@ -17,6 +24,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
     naicsCode: "",
     amount: "",
     contractType: "",
+    certifiedDbe: "no",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,6 +49,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         dbe_firm_name: formData.dbeFirmName,
         naics_code: formData.naicsCode,
         amount: parseFloat(formData.amount),
+        certified_dbe: formData.certifiedDbe === "yes",
         created_by: user.id
       });
 
@@ -51,6 +60,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         naicsCode: "",
         amount: "",
         contractType: "",
+        certifiedDbe: "no",
       });
 
       toast({
@@ -90,20 +100,21 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="contractType">Type of Contract</Label>
-              <select
-                id="contractType"
-                value={formData.contractType}
-                onChange={(e) =>
-                  setFormData({ ...formData, contractType: e.target.value })
-                }
-                className="w-full border rounded p-2"
-                required
-              >
-                <option value="">Select a contract type</option>
-                <option value="Subcontract">Subcontract</option>
-                <option value="Supplier">Supplier</option>
-                <option value="Manufacturer">Manufacturer</option>
-            </select>
+            <Select
+              value={formData.contractType}
+              onValueChange={(value) =>
+                setFormData({ ...formData, contractType: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a contract type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Subcontract">Subcontract</SelectItem>
+                <SelectItem value="Supplier">Supplier</SelectItem>
+                <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="naicsCode">NAICS Code (6 digits)</Label>
@@ -134,6 +145,23 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
               className="w-full"
               required
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="certifiedDbe">DBE Certified</Label>
+            <Select
+              value={formData.certifiedDbe}
+              onValueChange={(value) =>
+                setFormData({ ...formData, certifiedDbe: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div className="flex justify-end">
