@@ -15,6 +15,8 @@ export const ContractForm = () => {
     primeContractor: "",
     originalAmount: "",
     dbePercentage: "0.00",
+    awardDate: "",
+    reportDate: "",
   });
   const [contractId, setContractId] = useState<string | null>(null);
   const [showSubgrantForm, setShowSubgrantForm] = useState(false);

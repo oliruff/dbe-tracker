@@ -16,6 +16,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
     dbeFirmName: "",
     workType: "",
     amount: "",
+    contractType: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,6 +39,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         dbeFirmName: "",
         workType: "",
         amount: "",
+        contractType: "",
       });
 
       toast({
