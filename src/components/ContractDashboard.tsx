@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -9,9 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import {
   Select,
@@ -25,7 +22,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { SearchFilters } from "./dashboard/SearchFilters";
+import { SubgrantTable } from "./dashboard/SubgrantTable";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 interface Contract {
   id: string;
@@ -42,7 +43,7 @@ interface Contract {
 interface Subgrant {
   id: string;
   dbe_firm_name: string;
-  work_type: string;
+  naics_code: string;
   amount: number;
   certified_dbe: boolean;
   created_at: string;
@@ -68,7 +69,7 @@ export const ContractDashboard = () => {
           subgrants (
             id,
             dbe_firm_name,
-            work_type,
+            naics_code,
             amount,
             certified_dbe,
             created_at
@@ -121,21 +122,6 @@ export const ContractDashboard = () => {
     return matchesSearch && matchesAmount && matchesDate;
   });
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   if (isLoading) {
     return <div>Loading contracts...</div>;
   }
@@ -143,62 +129,12 @@ export const ContractDashboard = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6">
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <Label htmlFor="search">Search</Label>
-              <Input
-                id="search"
-                placeholder="Search contracts..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="minAmount">Min Amount</Label>
-              <Input
-                id="minAmount"
-                type="number"
-                placeholder="Min amount"
-                value={filters.minAmount}
-                onChange={(e) =>
-                  setFilters({ ...filters, minAmount: e.target.value })
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="maxAmount">Max Amount</Label>
-              <Input
-                id="maxAmount"
-                type="number"
-                placeholder="Max amount"
-                value={filters.maxAmount}
-                onChange={(e) =>
-                  setFilters({ ...filters, maxAmount: e.target.value })
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="dateRange">Date Range</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  type="date"
-                  value={filters.startDate}
-                  onChange={(e) =>
-                    setFilters({ ...filters, startDate: e.target.value })
-                  }
-                />
-                <Input
-                  type="date"
-                  value={filters.endDate}
-                  onChange={(e) =>
-                    setFilters({ ...filters, endDate: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <SearchFilters
+          searchTerm={searchTerm}
+          filters={filters}
+          setSearchTerm={setSearchTerm}
+          setFilters={setFilters}
+        />
       </Card>
 
       <Card className="p-6">
@@ -270,51 +206,10 @@ export const ContractDashboard = () => {
                     <TableCell colSpan={8}>
                       <div className="p-4 bg-gray-50 rounded-lg">
                         <h4 className="font-semibold mb-2">Subgrants</h4>
-                        {contract.subgrants && contract.subgrants.length > 0 ? (
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead className="w-[200px]">DBE Firm</TableHead>
-                                <TableHead className="w-[150px]">Work Type</TableHead>
-                                <TableHead className="w-[150px] text-right">Amount</TableHead>
-                                <TableHead className="w-[120px]">Date</TableHead>
-                                <TableHead className="w-[120px]">Certified DBE</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {contract.subgrants.map((subgrant) => (
-                                <TableRow key={subgrant.id}>
-                                  <TableCell>{subgrant.dbe_firm_name}</TableCell>
-                                  <TableCell>{subgrant.work_type}</TableCell>
-                                  <TableCell className="text-right font-mono">
-                                    {formatCurrency(subgrant.amount)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {formatDate(subgrant.created_at)}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Select
-                                      value={subgrant.certified_dbe ? "yes" : "no"}
-                                      onValueChange={(value) =>
-                                        updateSubgrantDBE(subgrant.id, value === "yes")
-                                      }
-                                    >
-                                      <SelectTrigger className="w-[100px]">
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="yes">Yes</SelectItem>
-                                        <SelectItem value="no">No</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        ) : (
-                          <p className="text-gray-500">No subgrants found</p>
-                        )}
+                        <SubgrantTable
+                          subgrants={contract.subgrants || []}
+                          updateSubgrantDBE={updateSubgrantDBE}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

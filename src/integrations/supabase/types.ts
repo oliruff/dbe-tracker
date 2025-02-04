@@ -75,8 +75,8 @@ export type Database = {
           created_by: string
           dbe_firm_name: string
           id: string
+          naics_code: string
           updated_at: string
-          work_type: string
         }
         Insert: {
           amount: number
@@ -86,8 +86,8 @@ export type Database = {
           created_by: string
           dbe_firm_name: string
           id?: string
+          naics_code: string
           updated_at?: string
-          work_type: string
         }
         Update: {
           amount?: number
@@ -97,8 +97,8 @@ export type Database = {
           created_by?: string
           dbe_firm_name?: string
           id?: string
+          naics_code?: string
           updated_at?: string
-          work_type?: string
         }
         Relationships: [
           {
