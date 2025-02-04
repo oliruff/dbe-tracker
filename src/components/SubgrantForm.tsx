@@ -14,13 +14,24 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     dbeFirmName: "",
-    workType: "",
+    naicsCode: "",
     amount: "",
     contractType: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate NAICS code format (6 digits)
+    if (!/^\d{6}$/.test(formData.naicsCode)) {
+      toast({
+        title: "Invalid NAICS Code",
+        description: "NAICS code must be exactly 6 digits.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
@@ -28,7 +39,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
       const { error } = await supabase.from("subgrants").insert({
         contract_id: contractId,
         dbe_firm_name: formData.dbeFirmName,
-        work_type: formData.workType,
+        naics_code: formData.naicsCode,
         amount: parseFloat(formData.amount),
         created_by: user.id
       });
@@ -37,7 +48,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
 
       setFormData({
         dbeFirmName: "",
-        workType: "",
+        naicsCode: "",
         amount: "",
         contractType: "",
       });
@@ -93,6 +104,21 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
                 <option value="Supplier">Supplier</option>
                 <option value="Manufacturer">Manufacturer</option>
             </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="naicsCode">NAICS Code (6 digits)</Label>
+            <Input
+              id="naicsCode"
+              value={formData.naicsCode}
+              onChange={(e) =>
+                setFormData({ ...formData, naicsCode: e.target.value })
+              }
+              pattern="\d{6}"
+              maxLength={6}
+              placeholder="Enter 6-digit NAICS code"
+              className="w-full font-mono"
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="amount">Amount ($)</Label>
