@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Table,
@@ -23,10 +23,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Trash2, Edit2 } from "lucide-react";
 import { SearchFilters } from "./dashboard/SearchFilters";
 import { SubgrantTable } from "./dashboard/SubgrantTable";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Contract {
   id: string;
@@ -50,6 +51,8 @@ interface Subgrant {
 }
 
 export const ContractDashboard = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedContract, setExpandedContract] = useState<string | null>(null);
   const [filters, setFilters] = useState({
@@ -82,6 +85,30 @@ export const ContractDashboard = () => {
     },
   });
 
+  const handleDeleteContract = async (contractId: string) => {
+    try {
+      const { error } = await supabase
+        .from("contracts")
+        .delete()
+        .eq("id", contractId);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
+      toast({
+        title: "Contract Deleted",
+        description: "The contract has been successfully deleted.",
+      });
+    } catch (error) {
+      console.error("Error deleting contract:", error);
+      toast({
+        title: "Error",
+        description: "There was an error deleting the contract.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const updateFinalReport = async (contractId: string, value: boolean) => {
     const { error } = await supabase
       .from("contracts")
@@ -90,6 +117,11 @@ export const ContractDashboard = () => {
 
     if (error) {
       console.error("Error updating final report:", error);
+      toast({
+        title: "Error",
+        description: "There was an error updating the final report status.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -101,6 +133,11 @@ export const ContractDashboard = () => {
 
     if (error) {
       console.error("Error updating certified DBE status:", error);
+      toast({
+        title: "Error",
+        description: "There was an error updating the DBE certification status.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -148,7 +185,7 @@ export const ContractDashboard = () => {
               <TableHead className="w-[100px] text-right">DBE %</TableHead>
               <TableHead className="w-[120px]">Date</TableHead>
               <TableHead className="w-[120px]">Final Report</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[120px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -162,7 +199,7 @@ export const ContractDashboard = () => {
                   )
                 }
               >
-                <TableRow>
+                <TableRow className="group">
                   <TableCell>{contract.tad_project_number}</TableCell>
                   <TableCell>{contract.contract_number}</TableCell>
                   <TableCell>{contract.prime_contractor}</TableCell>
@@ -189,16 +226,33 @@ export const ContractDashboard = () => {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell>
-                    <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        {expandedContract === contract.id ? (
-                          <ChevronUp className="h-4 w-4" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4" />
-                        )}
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => handleDeleteContract(contract.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
                       </Button>
-                    </CollapsibleTrigger>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          {expandedContract === contract.id ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
                   </TableCell>
                 </TableRow>
                 <CollapsibleContent>
