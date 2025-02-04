@@ -14,6 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -27,6 +34,7 @@ interface Contract {
   prime_contractor: string;
   original_amount: number;
   dbe_percentage: number;
+  final_report: boolean;
   created_at: string;
   subgrants?: Subgrant[];
 }
@@ -36,6 +44,7 @@ interface Subgrant {
   dbe_firm_name: string;
   work_type: string;
   amount: number;
+  certified_dbe: boolean;
   created_at: string;
 }
 
@@ -61,6 +70,7 @@ export const ContractDashboard = () => {
             dbe_firm_name,
             work_type,
             amount,
+            certified_dbe,
             created_at
           )
         `)
@@ -70,6 +80,28 @@ export const ContractDashboard = () => {
       return contracts as Contract[];
     },
   });
+
+  const updateFinalReport = async (contractId: string, value: boolean) => {
+    const { error } = await supabase
+      .from("contracts")
+      .update({ final_report: value })
+      .eq("id", contractId);
+
+    if (error) {
+      console.error("Error updating final report:", error);
+    }
+  };
+
+  const updateSubgrantDBE = async (subgrantId: string, value: boolean) => {
+    const { error } = await supabase
+      .from("subgrants")
+      .update({ certified_dbe: value })
+      .eq("id", subgrantId);
+
+    if (error) {
+      console.error("Error updating certified DBE status:", error);
+    }
+  };
 
   const filteredContracts = contracts?.filter((contract) => {
     const matchesSearch =
@@ -172,14 +204,15 @@ export const ContractDashboard = () => {
       <Card className="p-6">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>TAD Project #</TableHead>
-              <TableHead>Contract #</TableHead>
-              <TableHead>Prime Contractor</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>DBE %</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Actions</TableHead>
+            <TableRow className="bg-gray-50">
+              <TableHead className="w-[150px]">TAD Project #</TableHead>
+              <TableHead className="w-[150px]">Contract #</TableHead>
+              <TableHead className="w-[200px]">Prime Contractor</TableHead>
+              <TableHead className="w-[150px] text-right">Amount</TableHead>
+              <TableHead className="w-[100px] text-right">DBE %</TableHead>
+              <TableHead className="w-[120px]">Date</TableHead>
+              <TableHead className="w-[120px]">Final Report</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -197,9 +230,29 @@ export const ContractDashboard = () => {
                   <TableCell>{contract.tad_project_number}</TableCell>
                   <TableCell>{contract.contract_number}</TableCell>
                   <TableCell>{contract.prime_contractor}</TableCell>
-                  <TableCell>{formatCurrency(contract.original_amount)}</TableCell>
-                  <TableCell>{contract.dbe_percentage}%</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {formatCurrency(contract.original_amount)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {contract.dbe_percentage}%
+                  </TableCell>
                   <TableCell>{formatDate(contract.created_at)}</TableCell>
+                  <TableCell>
+                    <Select
+                      value={contract.final_report ? "yes" : "no"}
+                      onValueChange={(value) =>
+                        updateFinalReport(contract.id, value === "yes")
+                      }
+                    >
+                      <SelectTrigger className="w-[100px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
                   <TableCell>
                     <CollapsibleTrigger asChild>
                       <Button variant="ghost" size="sm">
@@ -214,17 +267,18 @@ export const ContractDashboard = () => {
                 </TableRow>
                 <CollapsibleContent>
                   <TableRow>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={8}>
                       <div className="p-4 bg-gray-50 rounded-lg">
                         <h4 className="font-semibold mb-2">Subgrants</h4>
                         {contract.subgrants && contract.subgrants.length > 0 ? (
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>DBE Firm</TableHead>
-                                <TableHead>Work Type</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead>Date</TableHead>
+                                <TableHead className="w-[200px]">DBE Firm</TableHead>
+                                <TableHead className="w-[150px]">Work Type</TableHead>
+                                <TableHead className="w-[150px] text-right">Amount</TableHead>
+                                <TableHead className="w-[120px]">Date</TableHead>
+                                <TableHead className="w-[120px]">Certified DBE</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -232,11 +286,27 @@ export const ContractDashboard = () => {
                                 <TableRow key={subgrant.id}>
                                   <TableCell>{subgrant.dbe_firm_name}</TableCell>
                                   <TableCell>{subgrant.work_type}</TableCell>
-                                  <TableCell>
+                                  <TableCell className="text-right font-mono">
                                     {formatCurrency(subgrant.amount)}
                                   </TableCell>
                                   <TableCell>
                                     {formatDate(subgrant.created_at)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Select
+                                      value={subgrant.certified_dbe ? "yes" : "no"}
+                                      onValueChange={(value) =>
+                                        updateSubgrantDBE(subgrant.id, value === "yes")
+                                      }
+                                    >
+                                      <SelectTrigger className="w-[100px]">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="yes">Yes</SelectItem>
+                                        <SelectItem value="no">No</SelectItem>
+                                      </SelectContent>
+                                    </Select>
                                   </TableCell>
                                 </TableRow>
                               ))}

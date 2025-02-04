@@ -15,6 +15,7 @@ export type Database = {
           created_at: string
           created_by: string
           dbe_percentage: number | null
+          final_report: boolean | null
           id: string
           original_amount: number
           prime_contractor: string
@@ -26,6 +27,7 @@ export type Database = {
           created_at?: string
           created_by: string
           dbe_percentage?: number | null
+          final_report?: boolean | null
           id?: string
           original_amount: number
           prime_contractor: string
@@ -37,6 +39,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           dbe_percentage?: number | null
+          final_report?: boolean | null
           id?: string
           original_amount?: number
           prime_contractor?: string
@@ -66,6 +69,7 @@ export type Database = {
       subgrants: {
         Row: {
           amount: number
+          certified_dbe: boolean | null
           contract_id: string
           created_at: string
           created_by: string
@@ -76,6 +80,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          certified_dbe?: boolean | null
           contract_id: string
           created_at?: string
           created_by: string
@@ -86,6 +91,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          certified_dbe?: boolean | null
           contract_id?: string
           created_at?: string
           created_by?: string
