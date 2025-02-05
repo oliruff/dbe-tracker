@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface SubgrantFormProps {
   contractId: string;
@@ -19,6 +20,7 @@ interface SubgrantFormProps {
 
 export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     dbeFirmName: "",
     naicsCode: "",
@@ -30,7 +32,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate NAICS code format (6 digits)
+    // Validate NAICS code format (exactly 6 digits)
     if (!/^\d{6}$/.test(formData.naicsCode)) {
       toast({
         title: "Invalid NAICS Code",
@@ -50,11 +52,12 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         naics_code: formData.naicsCode,
         amount: parseFloat(formData.amount),
         certified_dbe: formData.certifiedDbe === "yes",
-        created_by: user.id
+        created_by: user.id,
       });
 
       if (error) throw error;
 
+      // Reset form data after successful submission
       setFormData({
         dbeFirmName: "",
         naicsCode: "",
@@ -62,6 +65,9 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         contractType: "",
         certifiedDbe: "no",
       });
+
+      // Invalidate queries so that the SubgrantTable refreshes automatically
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
 
       toast({
         title: "Subgrant Added",
