@@ -125,7 +125,7 @@ export const ContractTableRow = ({
       value={contract.final_report ? "yes" : "no"}
       onValueChange={(value) => updateFinalReport(contract.id, value === "yes")}
     >
-      <SelectTrigger className="w-[80px]">
+      <SelectTrigger className="w-auto">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -135,7 +135,7 @@ export const ContractTableRow = ({
     </Select>
   </div>
 </TableCell>
-        <TableCell className="w-[100px]">
+        <TableCell className="w-auto">
           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
