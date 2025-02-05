@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       contracts: {
         Row: {
+          award_date: string | null
           contract_number: string
           created_at: string
           created_by: string
@@ -19,10 +20,12 @@ export type Database = {
           id: string
           original_amount: number
           prime_contractor: string
+          report_date: string | null
           tad_project_number: string
           updated_at: string
         }
         Insert: {
+          award_date?: string | null
           contract_number: string
           created_at?: string
           created_by: string
@@ -31,10 +34,12 @@ export type Database = {
           id?: string
           original_amount: number
           prime_contractor: string
+          report_date?: string | null
           tad_project_number: string
           updated_at?: string
         }
         Update: {
+          award_date?: string | null
           contract_number?: string
           created_at?: string
           created_by?: string
@@ -43,6 +48,7 @@ export type Database = {
           id?: string
           original_amount?: number
           prime_contractor?: string
+          report_date?: string | null
           tad_project_number?: string
           updated_at?: string
         }
