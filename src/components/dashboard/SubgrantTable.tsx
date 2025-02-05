@@ -19,17 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Edit2 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Subgrant {
-  id: string;
-  dbe_firm_name: string;
-  naics_code: string;
-  amount: number;
-  certified_dbe: boolean;
-  contract_type: string;
-  award_date: string;
-  created_at: string;
-}
+import type { Subgrant } from "./ContractTable";
 
 interface SubgrantTableProps {
   subgrants: Subgrant[];

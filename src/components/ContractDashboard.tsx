@@ -4,30 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { SearchFilters } from "./dashboard/SearchFilters";
 import { ContractTable } from "./dashboard/ContractTable";
-
-interface Contract {
-  id: string;
-  tad_project_number: string;
-  contract_number: string;
-  prime_contractor: string;
-  original_amount: number;
-  dbe_percentage: number;
-  final_report: boolean;
-  award_date: string;   // New field
-  report_date: string;  // New field
-  subgrants?: Subgrant[];
-}
-
-interface Subgrant {
-  id: string;
-  dbe_firm_name: string;
-  naics_code: string;
-  amount: number;
-  certified_dbe: boolean;
-  contract_type: string; // New field: Type of Contract
-  award_date: string;    // New field: Date of Award
-  created_at: string;
-}
+import type { Contract, Subgrant } from "./dashboard/ContractTable";
 
 export const ContractDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,7 +29,12 @@ export const ContractDashboard = () => {
             naics_code,
             amount,
             certified_dbe,
-            created_at
+            contract_type,
+            award_date,
+            created_at,
+            created_by,
+            updated_at,
+            contract_id
           )
         `)
         .order("created_at", { ascending: false });
@@ -66,7 +48,6 @@ export const ContractDashboard = () => {
     const { error } = await supabase
       .from("subgrants")
       .update({ certified_dbe: value })
-      .update({ contract_type: value })
       .eq("id", subgrantId);
 
     if (error) {

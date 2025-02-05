@@ -15,8 +15,11 @@ interface Contract {
   original_amount: number;
   dbe_percentage: number;
   final_report: boolean;
-  award_date: string;   // New field
-  report_date: string;  // New field
+  award_date: string;
+  report_date: string;
+  created_at: string;
+  updated_at: string;
+  created_by: string;
   subgrants?: Subgrant[];
 }
 
@@ -26,9 +29,12 @@ interface Subgrant {
   naics_code: string;
   amount: number;
   certified_dbe: boolean;
-  contract_type: string; // New field: Type of Contract
-  award_date: string;    // New field: Date of Award
+  contract_type: string;
+  award_date: string;
   created_at: string;
+  created_by: string;
+  updated_at: string;
+  contract_id: string;
 }
 
 interface ContractTableProps {
