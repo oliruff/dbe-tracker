@@ -108,17 +108,17 @@ export const ContractTableRow = ({
 
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
-      <TableRow className="group">
-        <TableCell className="font-medium">{contract.tad_project_number}</TableCell>
-        <TableCell>{contract.contract_number}</TableCell>
-        <TableCell>{contract.prime_contractor}</TableCell>
-        <TableCell className="text-right font-mono">
+      <TableRow className="group hover:bg-gray-50">
+        <TableCell className="font-medium whitespace-nowrap">{contract.tad_project_number}</TableCell>
+        <TableCell className="whitespace-nowrap">{contract.contract_number}</TableCell>
+        <TableCell className="whitespace-nowrap">{contract.prime_contractor}</TableCell>
+        <TableCell className="text-right font-mono whitespace-nowrap">
           {formatCurrency(contract.original_amount)}
         </TableCell>
-        <TableCell className="text-right">
+        <TableCell className="text-right whitespace-nowrap">
           {contract.dbe_percentage}%
         </TableCell>
-        <TableCell>{formatDate(contract.created_at)}</TableCell>
+        <TableCell className="whitespace-nowrap">{formatDate(contract.created_at)}</TableCell>
         <TableCell>
           <Select
             value={contract.final_report ? "yes" : "no"}
@@ -126,7 +126,7 @@ export const ContractTableRow = ({
               updateFinalReport(contract.id, value === "yes")
             }
           >
-            <SelectTrigger className="w-[100px]">
+            <SelectTrigger className="w-[80px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
