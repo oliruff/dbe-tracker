@@ -103,17 +103,20 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             <TableCell>{formatDate(subgrant.created_at)}</TableCell>
             <TableCell className="text-center">
             <Select
-                value={subgrant.contract_type "Subcontract" : "Supplier" : "Manufacturer"}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
+              value={subgrant.contract_type}
+              onValueChange={(value) =>
+                setFormData({ ...formData, contractType: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a contract type" />
+              </SelectTrigger>
+              <SelectContent>
                 <SelectItem value="Subcontract">Subcontract</SelectItem>
                 <SelectItem value="Supplier">Supplier</SelectItem>
                 <SelectItem value="Manufacturer">Manufacturer</SelectItem>
               </SelectContent>
-              </Select>
+            </Select>
               <Select
                 value={subgrant.certified_dbe ? "yes" : "no"}
                 onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "yes")}
