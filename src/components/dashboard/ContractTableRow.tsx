@@ -24,7 +24,8 @@ interface Contract {
   original_amount: number;
   dbe_percentage: number;
   final_report: boolean;
-  created_at: string;
+  award_date: string;  // New field
+  report_date: string; // New field
   subgrants?: Subgrant[];
 }
 
@@ -100,7 +101,9 @@ export const ContractTableRow = ({
         <TableCell>{contract.prime_contractor}</TableCell>
         <TableCell className="text-right">{formatCurrency(contract.original_amount)}</TableCell>
         <TableCell className="text-right">{contract.dbe_percentage}%</TableCell>
-        <TableCell>{formatDate(contract.created_at)}</TableCell>
+        {/* New Award Date and Report Date cells */}
+        <TableCell>{formatDate(contract.award_date)}</TableCell>
+        <TableCell>{formatDate(contract.report_date)}</TableCell>
         <TableCell className="text-center">
           <Select
             value={contract.final_report ? "yes" : "no"}
@@ -143,7 +146,7 @@ export const ContractTableRow = ({
       </TableRow>
       {isExpanded && (
         <TableRow>
-          <TableCell colSpan={8}>
+          <TableCell colSpan={9}>
             <div className="p-4 bg-gray-50 rounded-lg">
               <h4 className="font-semibold mb-2">Subgrants</h4>
               <SubgrantTable

@@ -15,7 +15,8 @@ interface Contract {
   original_amount: number;
   dbe_percentage: number;
   final_report: boolean;
-  created_at: string;
+  award_date: string;   // New field
+  report_date: string;  // New field
   subgrants?: Subgrant[];
 }
 
@@ -61,8 +62,12 @@ export const ContractTable = ({
             <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
               DBE %
             </th>
+            {/* New columns for Award and Report Dates */}
             <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
-              Date
+              Award Date
+            </th>
+            <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+              Report Date
             </th>
             <th className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
               Final Report

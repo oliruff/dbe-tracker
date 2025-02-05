@@ -24,7 +24,7 @@ export const ContractForm = () => {
     dbePercentage: "",
     awardDate: "",
     reportDate: "",
-    finalReport: "no", // new field for Final Report ("yes" or "no")
+    finalReport: "no", // New field for Final Report ("yes" or "no")
   });
   const [contractId, setContractId] = useState<string | null>(null);
   const [showSubgrantForm, setShowSubgrantForm] = useState(false);
@@ -35,6 +35,7 @@ export const ContractForm = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
+      // Insert the contract along with the new date fields
       const { data: contract, error } = await supabase
         .from("contracts")
         .insert({
@@ -43,9 +44,10 @@ export const ContractForm = () => {
           prime_contractor: formData.primeContractor,
           original_amount: parseFloat(formData.originalAmount),
           dbe_percentage: parseFloat(formData.dbePercentage || "0"),
-          final_report: formData.finalReport === "yes", // convert select to boolean
+          final_report: formData.finalReport === "yes", // Convert select to boolean
+          award_date: formData.awardDate, // New field
+          report_date: formData.reportDate, // New field
           created_by: user.id,
-          // You can also save awardDate and reportDate if needed
         })
         .select()
         .single();
@@ -54,7 +56,7 @@ export const ContractForm = () => {
 
       setContractId(contract.id);
       setShowSubgrantForm(true);
-
+      
       toast({
         title: "Contract Submitted",
         description: "The contract has been successfully recorded. You can now add subgrants.",
@@ -74,6 +76,7 @@ export const ContractForm = () => {
       <Card className="p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Existing Fields */}
             <div className="space-y-2">
               <Label htmlFor="tadProjectNumber">TAD Project Number</Label>
               <Input
@@ -141,7 +144,7 @@ export const ContractForm = () => {
                 required
               />
             </div>
-            {/* New Select field for Final Report */}
+            {/* New Final Report Select */}
             <div className="space-y-2">
               <Label htmlFor="finalReport">Final Report</Label>
               <Select
@@ -159,6 +162,7 @@ export const ContractForm = () => {
                 </SelectContent>
               </Select>
             </div>
+            {/* New Date Fields */}
             <div className="space-y-2">
               <Label htmlFor="awardDate">Contract Award Date</Label>
               <Input
@@ -187,7 +191,7 @@ export const ContractForm = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button
+            <Button 
               type="submit"
               className="bg-tdot-red hover:bg-tdot-red/90 text-white"
               disabled={showSubgrantForm}
