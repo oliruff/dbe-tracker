@@ -15,28 +15,7 @@ import { Trash2, Edit2, ChevronDown, ChevronUp } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
 import { SubgrantTable } from "./SubgrantTable";
-
-interface Contract {
-  id: string;
-  tad_project_number: string;
-  contract_number: string;
-  prime_contractor: string;
-  original_amount: number;
-  dbe_percentage: number;
-  final_report: boolean;
-  award_date: string;  // New field
-  report_date: string; // New field
-  subgrants?: Subgrant[];
-}
-
-interface Subgrant {
-  id: string;
-  dbe_firm_name: string;
-  naics_code: string;
-  amount: number;
-  certified_dbe: boolean;
-  created_at: string;
-}
+import type { Contract, Subgrant } from "./ContractTable";
 
 interface ContractTableRowProps {
   contract: Contract;
@@ -101,7 +80,6 @@ export const ContractTableRow = ({
         <TableCell>{contract.prime_contractor}</TableCell>
         <TableCell className="text-right">{formatCurrency(contract.original_amount)}</TableCell>
         <TableCell className="text-right">{contract.dbe_percentage}%</TableCell>
-        {/* New Award Date and Report Date cells */}
         <TableCell>{formatDate(contract.award_date)}</TableCell>
         <TableCell>{formatDate(contract.report_date)}</TableCell>
         <TableCell className="text-center">
