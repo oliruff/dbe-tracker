@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/table";
 import { ContractTableRow } from "./ContractTableRow";
 
-interface Contract {
+export interface Contract {
   id: string;
   tad_project_number: string;
   contract_number: string;
@@ -23,7 +23,7 @@ interface Contract {
   subgrants?: Subgrant[];
 }
 
-interface Subgrant {
+export interface Subgrant {
   id: string;
   dbe_firm_name: string;
   naics_code: string;
@@ -70,7 +70,6 @@ export const ContractTable = ({
             <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
               DBE %
             </th>
-            {/* New columns for Award and Report Dates */}
             <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
               Award Date
             </th>
