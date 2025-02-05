@@ -1,4 +1,3 @@
-*SubgrantTable.tsx* 
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -43,12 +42,18 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
     try {
       const { error } = await supabase.from("subgrants").delete().eq("id", subgrantId);
       if (error) throw error;
-
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
-      toast({ title: "Subgrant Deleted", description: "The subgrant has been successfully deleted." });
+      toast({
+        title: "Subgrant Deleted",
+        description: "The subgrant has been successfully deleted.",
+      });
     } catch (error) {
       console.error("Error deleting subgrant:", error);
-      toast({ title: "Error", description: "There was an error deleting the subgrant.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "There was an error deleting the subgrant.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -60,12 +65,24 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>DBE Firm</TableHead>
-          <TableHead>NAICS Code</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Certified DBE</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+            DBE Firm
+          </th>
+          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+            NAICS Code
+          </th>
+          <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+            Amount
+          </th>
+          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+            Date
+          </th>
+          <th className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
+            Certified DBE
+          </th>
+          <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+            Actions
+          </th>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -75,8 +92,11 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             <TableCell className="font-mono">{subgrant.naics_code}</TableCell>
             <TableCell className="text-right font-mono">{formatCurrency(subgrant.amount)}</TableCell>
             <TableCell>{formatDate(subgrant.created_at)}</TableCell>
-            <TableCell>
-              <Select value={subgrant.certified_dbe ? "yes" : "no"} onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "yes")}>
+            <TableCell className="text-center">
+              <Select
+                value={subgrant.certified_dbe ? "yes" : "no"}
+                onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "yes")}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -88,10 +108,14 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             </TableCell>
             <TableCell className="text-right">
               <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteSubgrant(subgrant.id)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDeleteSubgrant(subgrant.id)}
+                >
                   <Trash2 className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                <Button variant="ghost" size="sm">
                   <Edit2 className="h-4 w-4" />
                 </Button>
               </div>

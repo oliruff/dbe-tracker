@@ -1,8 +1,6 @@
-*ContractTable.tsx* 
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -47,15 +45,31 @@ export const ContractTable = ({
     <div className="relative overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>TAD Project #</TableHead>
-            <TableHead>Contract #</TableHead>
-            <TableHead>Prime Contractor</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">DBE %</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Final Report</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+          <TableRow className="bg-gray-50">
+            <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+              TAD Project #
+            </th>
+            <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+              Contract #
+            </th>
+            <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+              Prime Contractor
+            </th>
+            <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+              Amount
+            </th>
+            <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+              DBE %
+            </th>
+            <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+              Date
+            </th>
+            <th className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
+              Final Report
+            </th>
+            <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+              Actions
+            </th>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -64,7 +78,9 @@ export const ContractTable = ({
               key={contract.id}
               contract={contract}
               isExpanded={expandedContract === contract.id}
-              onToggleExpand={() => setExpandedContract(expandedContract === contract.id ? null : contract.id)}
+              onToggleExpand={() =>
+                setExpandedContract(expandedContract === contract.id ? null : contract.id)
+              }
               updateSubgrantDBE={updateSubgrantDBE}
             />
           ))}
