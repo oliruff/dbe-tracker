@@ -47,7 +47,7 @@ export const ContractTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50">
-            <TableHead className="w-[200px]">TAD Project #</TableHead>
+            <TableHead className="w-[120px]">TAD Project #</TableHead>
             <TableHead className="w-[140px]">Contract #</TableHead>
             <TableHead className="w-[180px]">Prime Contractor</TableHead>
             <TableHead className="w-[120px]">Amount</TableHead>

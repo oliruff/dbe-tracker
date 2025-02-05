@@ -109,7 +109,7 @@ export const ContractTableRow = ({
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
       <TableRow className="group hover:bg-gray-50">
-        <TableCell className="w-[200px]">{contract.tad_project_number}</TableCell>
+        <TableCell className="w-[120px]">{contract.tad_project_number}</TableCell>
         <TableCell className="w-[140px]">{contract.contract_number}</TableCell>
         <TableCell className="w-[180px]">{contract.prime_contractor}</TableCell>
         <TableCell className="w-[120px]">
