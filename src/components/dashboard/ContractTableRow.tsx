@@ -109,17 +109,17 @@ export const ContractTableRow = ({
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
       <TableRow className="group hover:bg-gray-50">
-        <TableCell className="text-left font-medium whitespace-nowrap w-[200px]">{contract.tad_project_number}</TableCell>
-        <TableCell className="text-left whitespace-nowrap w-[140px]">{contract.contract_number}</TableCell>
-        <TableCell className="text-left whitespace-nowrap w-[180px]">{contract.prime_contractor}</TableCell>
-        <TableCell className="text-left font-mono whitespace-nowrap w-[120px]">
+        <TableCell className="w-[200px]">{contract.tad_project_number}</TableCell>
+        <TableCell className="w-[140px]">{contract.contract_number}</TableCell>
+        <TableCell className="w-[180px]">{contract.prime_contractor}</TableCell>
+        <TableCell className="w-[120px]">
           {formatCurrency(contract.original_amount)}
         </TableCell>
-        <TableCell className="text-left whitespace-nowrap w-[100px]">
+        <TableCell className="w-[100px]">
           {contract.dbe_percentage}%
         </TableCell>
-        <TableCell className="text-left whitespace-nowrap w-[120px]">{formatDate(contract.created_at)}</TableCell>
-        <TableCell className="text-left w-[120px] text-center">
+        <TableCell className="w-[120px]">{formatDate(contract.created_at)}</TableCell>
+        <TableCell className="w-[120px] text-center">
   <div className="flex justify-center">
     <Select
       value={contract.final_report ? "yes" : "no"}
@@ -135,7 +135,7 @@ export const ContractTableRow = ({
     </Select>
   </div>
 </TableCell>
-        <TableCell className="text-left w-[100px]">
+        <TableCell className="w-[100px]">
           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
