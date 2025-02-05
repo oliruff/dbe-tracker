@@ -47,10 +47,10 @@ export const ContractTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50">
-            <TableHead className="w-[120px]">TAD Project #</TableHead>
-            <TableHead className="w-[140px]">Contract #</TableHead>
-            <TableHead className="w-[180px]">Prime Contractor</TableHead>
-            <TableHead className="w-[120px]">Amount</TableHead>
+            <TableHead className="w-auto">TAD Project #</TableHead>
+            <TableHead className="w-auto">Contract #</TableHead>
+            <TableHead className="w-auto">Prime Contractor</TableHead>
+            <TableHead className="w-auto">Amount</TableHead>
             <TableHead className="w-[100px]">DBE %</TableHead>
             <TableHead className="w-[120px]">Date</TableHead>
             <TableHead className="w-[120px]">Final Report</TableHead>
