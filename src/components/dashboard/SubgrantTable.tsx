@@ -104,7 +104,6 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             <TableCell className="text-center">
             <Select
                 value={subgrant.contract_type "Subcontract" : "Supplier" : "Manufacturer"}
-                onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "Subcontract")}
               >
                 <SelectTrigger>
                   <SelectValue />
