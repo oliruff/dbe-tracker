@@ -109,32 +109,32 @@ export const ContractTableRow = ({
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
       <TableRow className="group hover:bg-gray-50">
-        <TableCell className="font-medium whitespace-nowrap w-[200px]">{contract.tad_project_number}</TableCell>
-        <TableCell className="whitespace-nowrap w-[140px]">{contract.contract_number}</TableCell>
-        <TableCell className="whitespace-nowrap w-[180px]">{contract.prime_contractor}</TableCell>
+        <TableCell className="text-right font-medium whitespace-nowrap w-[200px]">{contract.tad_project_number}</TableCell>
+        <TableCell className="text-right whitespace-nowrap w-[140px]">{contract.contract_number}</TableCell>
+        <TableCell className="text-right whitespace-nowrap w-[180px]">{contract.prime_contractor}</TableCell>
         <TableCell className="text-right font-mono whitespace-nowrap w-[120px]">
           {formatCurrency(contract.original_amount)}
         </TableCell>
         <TableCell className="text-right whitespace-nowrap w-[100px]">
           {contract.dbe_percentage}%
         </TableCell>
-        <TableCell className="whitespace-nowrap w-[120px]">{formatDate(contract.created_at)}</TableCell>
-        <TableCell className="w-[120px]">
-          <Select
-            value={contract.final_report ? "yes" : "no"}
-            onValueChange={(value) =>
-              updateFinalReport(contract.id, value === "yes")
-            }
-          >
-            <SelectTrigger className="w-[80px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </TableCell>
+        <TableCell className="text-right whitespace-nowrap w-[120px]">{formatDate(contract.created_at)}</TableCell>
+        <TableCell className="text-right w-[120px] text-center">
+  <div className="flex justify-center">
+    <Select
+      value={contract.final_report ? "yes" : "no"}
+      onValueChange={(value) => updateFinalReport(contract.id, value === "yes")}
+    >
+      <SelectTrigger className="w-[80px]">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="yes">Yes</SelectItem>
+        <SelectItem value="no">No</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+</TableCell>
         <TableCell className="text-right w-[100px]">
           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button

@@ -47,13 +47,13 @@ export const ContractTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50">
-            <TableHead className="w-[200px] whitespace-nowrap font-semibold">TAD Project #</TableHead>
-            <TableHead className="w-[140px] whitespace-nowrap font-semibold">Contract #</TableHead>
-            <TableHead className="w-[180px] whitespace-nowrap font-semibold">Prime Contractor</TableHead>
+            <TableHead className="w-[200px] text-right whitespace-nowrap font-semibold">TAD Project #</TableHead>
+            <TableHead className="w-[140px] text-right whitespace-nowrap font-semibold">Contract #</TableHead>
+            <TableHead className="w-[180px] text-right whitespace-nowrap font-semibold">Prime Contractor</TableHead>
             <TableHead className="w-[120px] text-right whitespace-nowrap font-semibold">Amount</TableHead>
             <TableHead className="w-[100px] text-right whitespace-nowrap font-semibold">DBE %</TableHead>
-            <TableHead className="w-[120px] whitespace-nowrap font-semibold">Date</TableHead>
-            <TableHead className="w-[120px] whitespace-nowrap font-semibold">Final Report</TableHead>
+            <TableHead className="w-[120px] text-right whitespace-nowrap font-semibold">Date</TableHead>
+            <TableHead className="w-[120px] text-right whitespace-nowrap font-semibold">Final Report</TableHead>
             <TableHead className="w-[100px] text-right whitespace-nowrap font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
