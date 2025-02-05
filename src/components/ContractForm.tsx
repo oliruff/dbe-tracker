@@ -6,6 +6,13 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { SubgrantForm } from "./SubgrantForm";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const ContractForm = () => {
   const { toast } = useToast();
@@ -17,6 +24,7 @@ export const ContractForm = () => {
     dbePercentage: "",
     awardDate: "",
     reportDate: "",
+    finalReport: "no", // new field for Final Report ("yes" or "no")
   });
   const [contractId, setContractId] = useState<string | null>(null);
   const [showSubgrantForm, setShowSubgrantForm] = useState(false);
@@ -35,7 +43,9 @@ export const ContractForm = () => {
           prime_contractor: formData.primeContractor,
           original_amount: parseFloat(formData.originalAmount),
           dbe_percentage: parseFloat(formData.dbePercentage || "0"),
-          created_by: user.id
+          final_report: formData.finalReport === "yes", // convert select to boolean
+          created_by: user.id,
+          // You can also save awardDate and reportDate if needed
         })
         .select()
         .single();
@@ -44,7 +54,7 @@ export const ContractForm = () => {
 
       setContractId(contract.id);
       setShowSubgrantForm(true);
-      
+
       toast({
         title: "Contract Submitted",
         description: "The contract has been successfully recorded. You can now add subgrants.",
@@ -131,6 +141,24 @@ export const ContractForm = () => {
                 required
               />
             </div>
+            {/* New Select field for Final Report */}
+            <div className="space-y-2">
+              <Label htmlFor="finalReport">Final Report</Label>
+              <Select
+                value={formData.finalReport}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, finalReport: value })
+                }
+              >
+                <SelectTrigger id="finalReport" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="awardDate">Contract Award Date</Label>
               <Input
@@ -159,7 +187,7 @@ export const ContractForm = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button 
+            <Button
               type="submit"
               className="bg-tdot-red hover:bg-tdot-red/90 text-white"
               disabled={showSubgrantForm}
