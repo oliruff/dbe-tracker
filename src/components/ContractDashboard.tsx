@@ -28,6 +28,7 @@ import { SearchFilters } from "./dashboard/SearchFilters";
 import { SubgrantTable } from "./dashboard/SubgrantTable";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface Contract {
   id: string;
@@ -52,6 +53,7 @@ interface Subgrant {
 
 export const ContractDashboard = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedContract, setExpandedContract] = useState<string | null>(null);
@@ -107,6 +109,10 @@ export const ContractDashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleEditContract = (contractId: string) => {
+    navigate(`/edit-contract/${contractId}`);
   };
 
   const updateFinalReport = async (contractId: string, value: boolean) => {
@@ -178,14 +184,14 @@ export const ContractDashboard = () => {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50">
-              <TableHead className="w-[150px]">TAD Project #</TableHead>
-              <TableHead className="w-[150px]">Contract #</TableHead>
-              <TableHead className="w-[200px]">Prime Contractor</TableHead>
-              <TableHead className="w-[150px] text-right">Amount</TableHead>
-              <TableHead className="w-[100px] text-right">DBE %</TableHead>
-              <TableHead className="w-[120px]">Date</TableHead>
-              <TableHead className="w-[120px]">Final Report</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
+              <TableHead className="w-[150px] whitespace-nowrap">TAD Project #</TableHead>
+              <TableHead className="w-[150px] whitespace-nowrap">Contract #</TableHead>
+              <TableHead className="w-[200px] whitespace-nowrap">Prime Contractor</TableHead>
+              <TableHead className="w-[150px] text-right whitespace-nowrap">Amount</TableHead>
+              <TableHead className="w-[100px] text-right whitespace-nowrap">DBE %</TableHead>
+              <TableHead className="w-[120px] whitespace-nowrap">Date</TableHead>
+              <TableHead className="w-[120px] whitespace-nowrap">Final Report</TableHead>
+              <TableHead className="w-[120px] text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -200,7 +206,7 @@ export const ContractDashboard = () => {
                 }
               >
                 <TableRow className="group">
-                  <TableCell>{contract.tad_project_number}</TableCell>
+                  <TableCell className="font-medium">{contract.tad_project_number}</TableCell>
                   <TableCell>{contract.contract_number}</TableCell>
                   <TableCell>{contract.prime_contractor}</TableCell>
                   <TableCell className="text-right font-mono">
@@ -240,6 +246,7 @@ export const ContractDashboard = () => {
                         variant="ghost"
                         size="sm"
                         className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        onClick={() => handleEditContract(contract.id)}
                       >
                         <Edit2 className="h-4 w-4" />
                       </Button>
