@@ -26,6 +26,8 @@ interface Subgrant {
   naics_code: string;
   amount: number;
   certified_dbe: boolean;
+  contract_type: string; // New field: Type of Contract
+  award_date: string;    // New field: Date of Award
   created_at: string;
 }
 

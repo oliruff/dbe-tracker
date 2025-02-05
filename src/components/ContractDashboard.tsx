@@ -13,7 +13,8 @@ interface Contract {
   original_amount: number;
   dbe_percentage: number;
   final_report: boolean;
-  created_at: string;
+  award_date: string;   // New field
+  report_date: string;  // New field
   subgrants?: Subgrant[];
 }
 
@@ -23,6 +24,8 @@ interface Subgrant {
   naics_code: string;
   amount: number;
   certified_dbe: boolean;
+  contract_type: string; // New field: Type of Contract
+  award_date: string;    // New field: Date of Award
   created_at: string;
 }
 
@@ -63,6 +66,7 @@ export const ContractDashboard = () => {
     const { error } = await supabase
       .from("subgrants")
       .update({ certified_dbe: value })
+      .update({ contract_type: value })
       .eq("id", subgrantId);
 
     if (error) {
