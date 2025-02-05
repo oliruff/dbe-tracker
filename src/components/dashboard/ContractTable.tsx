@@ -51,10 +51,10 @@ export const ContractTable = ({
             <TableHead className="w-auto">Contract #</TableHead>
             <TableHead className="w-auto">Prime Contractor</TableHead>
             <TableHead className="w-auto">Amount</TableHead>
-            <TableHead className="w-[100px]">DBE %</TableHead>
-            <TableHead className="w-[120px]">Date</TableHead>
-            <TableHead className="w-[120px]">Final Report</TableHead>
-            <TableHead className="w-[100px]">Actions</TableHead>
+            <TableHead className="w-auto">DBE %</TableHead>
+            <TableHead className="w-auto">Date</TableHead>
+            <TableHead className="w-auto">Final Report</TableHead>
+            <TableHead className="w-auto">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

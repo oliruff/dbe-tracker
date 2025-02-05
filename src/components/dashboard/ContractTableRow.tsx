@@ -109,17 +109,17 @@ export const ContractTableRow = ({
   return (
     <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
       <TableRow className="group hover:bg-gray-50">
-        <TableCell className="w-[120px]">{contract.tad_project_number}</TableCell>
-        <TableCell className="w-[140px]">{contract.contract_number}</TableCell>
-        <TableCell className="w-[180px]">{contract.prime_contractor}</TableCell>
-        <TableCell className="w-[120px]">
+        <TableCell className="w-auto">{contract.tad_project_number}</TableCell>
+        <TableCell className="w-auto">{contract.contract_number}</TableCell>
+        <TableCell className="w-auto">{contract.prime_contractor}</TableCell>
+        <TableCell className="w-auto]">
           {formatCurrency(contract.original_amount)}
         </TableCell>
-        <TableCell className="w-[100px]">
+        <TableCell className="w-auto">
           {contract.dbe_percentage}%
         </TableCell>
-        <TableCell className="w-[120px]">{formatDate(contract.created_at)}</TableCell>
-        <TableCell className="w-[120px] text-center">
+        <TableCell className="w-auto">{formatDate(contract.created_at)}</TableCell>
+        <TableCell className="w-auto text-center">
   <div className="flex justify-center">
     <Select
       value={contract.final_report ? "yes" : "no"}
