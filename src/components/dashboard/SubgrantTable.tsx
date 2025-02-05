@@ -19,15 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Edit2 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
-import "@/App.css"; // Adjust the path as necessary
-import type { AppProps } from "next/app";
-
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
-}
-
-export default MyApp;
-
 
 interface Subgrant {
   id: string;
