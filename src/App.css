@@ -56,7 +56,6 @@ table {
 th,
 td {
   padding: 1rem;
-  text-align: left;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -64,10 +63,25 @@ th {
   background-color: #f9fafb;
   font-weight: 600;
   color: #374151;
+  text-align: left;
 }
 
 td {
   vertical-align: middle;
+}
+
+/* Specific column alignment fixes */
+th:nth-child(4),
+td:nth-child(4),  /* Prime Contractor */
+th:nth-child(5),
+td:nth-child(5),  /* Amount */
+th:nth-child(6),
+td:nth-child(6),  /* DBE % */
+th:nth-child(7),
+td:nth-child(7),  /* Date */
+th:nth-child(8),
+td:nth-child(8) { /* Actions */
+  text-align: right;
 }
 
 /* Utility classes */
