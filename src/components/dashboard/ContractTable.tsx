@@ -1,3 +1,4 @@
+*ContractTable.tsx* 
 import {
   Table,
   TableBody,
@@ -46,15 +47,15 @@ export const ContractTable = ({
     <div className="relative overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="w-auto">TAD Project #</TableHead>
-            <TableHead className="w-auto">Contract #</TableHead>
-            <TableHead className="w-auto">Prime Contractor</TableHead>
-            <TableHead className="w-auto">Amount</TableHead>
-            <TableHead className="w-auto">DBE %</TableHead>
-            <TableHead className="w-auto">Date</TableHead>
-            <TableHead className="w-auto">Final Report</TableHead>
-            <TableHead className="w-auto">Actions</TableHead>
+          <TableRow>
+            <TableHead>TAD Project #</TableHead>
+            <TableHead>Contract #</TableHead>
+            <TableHead>Prime Contractor</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">DBE %</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Final Report</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -63,11 +64,7 @@ export const ContractTable = ({
               key={contract.id}
               contract={contract}
               isExpanded={expandedContract === contract.id}
-              onToggleExpand={() =>
-                setExpandedContract(
-                  expandedContract === contract.id ? null : contract.id
-                )
-              }
+              onToggleExpand={() => setExpandedContract(expandedContract === contract.id ? null : contract.id)}
               updateSubgrantDBE={updateSubgrantDBE}
             />
           ))}
