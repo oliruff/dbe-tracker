@@ -26,6 +26,8 @@ interface Subgrant {
   naics_code: string;
   amount: number;
   certified_dbe: boolean;
+  contract_type: string; // New field: Type of Contract
+  award_date: string;    // New field: Date of Award
   created_at: string;
 }
 
@@ -75,10 +77,16 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             Amount
           </th>
           <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
-            Date
+            Contract Type
+          </th>
+          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+            Award Date
+          </th>
+          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+            Date Created
           </th>
           <th className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
-            Certified DBE
+            DBE Certified
           </th>
           <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
             Actions
@@ -91,6 +99,8 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             <TableCell>{subgrant.dbe_firm_name}</TableCell>
             <TableCell className="font-mono">{subgrant.naics_code}</TableCell>
             <TableCell className="text-right font-mono">{formatCurrency(subgrant.amount)}</TableCell>
+            <TableCell>{subgrant.contract_type}</TableCell>
+            <TableCell>{formatDate(subgrant.award_date)}</TableCell>
             <TableCell>{formatDate(subgrant.created_at)}</TableCell>
             <TableCell className="text-center">
               <Select

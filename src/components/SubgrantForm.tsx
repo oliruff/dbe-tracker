@@ -27,6 +27,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
     amount: "",
     contractType: "",
     certifiedDbe: "no",
+    awardDate: "", // New field for Date of Award
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +53,8 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         naics_code: formData.naicsCode,
         amount: parseFloat(formData.amount),
         certified_dbe: formData.certifiedDbe === "yes",
+        contract_type: formData.contractType,     // Save contract type
+        award_date: formData.awardDate,            // Save award date
         created_by: user.id,
       });
 
@@ -64,6 +67,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         amount: "",
         contractType: "",
         certifiedDbe: "no",
+        awardDate: "",
       });
 
       // Invalidate queries so that the SubgrantTable refreshes automatically
@@ -121,6 +125,19 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
                 <SelectItem value="Manufacturer">Manufacturer</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="awardDate">Date of Award</Label>
+            <Input
+              id="awardDate"
+              type="date"
+              value={formData.awardDate}
+              onChange={(e) =>
+                setFormData({ ...formData, awardDate: e.target.value })
+              }
+              className="w-full"
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="naicsCode">NAICS Code (6 digits)</Label>
