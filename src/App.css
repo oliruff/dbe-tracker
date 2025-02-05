@@ -81,12 +81,12 @@ th:nth-child(7),
 td:nth-child(7),  /* Date */
 th:nth-child(8),
 td:nth-child(8) { /* Actions */
-  text-align: right;
+  text-align: left;
 }
 
 /* Utility classes */
 .text-right {
-  text-align: right;
+  text-align: left;
 }
 
 .font-mono {
