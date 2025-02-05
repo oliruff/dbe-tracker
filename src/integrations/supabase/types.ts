@@ -4,170 +4,167 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   public: {
     Tables: {
       contracts: {
         Row: {
-          award_date: string | null;
-          contract_number: string;
-          created_at: string;
-          created_by: string;
-          dbe_percentage: number | null;
-          final_report: boolean | null;
-          id: string;
-          original_amount: number;
-          prime_contractor: string;
-          report_date: string | null;
-          tad_project_number: string;
-          updated_at: string;
-        };
+          award_date: string
+          contract_number: string
+          created_at: string
+          created_by: string
+          dbe_percentage: number
+          final_report: boolean
+          id: string
+          original_amount: number
+          prime_contractor: string
+          report_date: string
+          tad_project_number: string
+          updated_at: string
+        }
         Insert: {
-          award_date?: string | null;
-          contract_number: string;
-          created_at?: string;
-          created_by: string;
-          dbe_percentage?: number | null;
-          final_report?: boolean | null;
-          id?: string;
-          original_amount: number;
-          prime_contractor: string;
-          report_date?: string | null;
-          tad_project_number: string;
-          updated_at?: string;
-        };
+          award_date: string
+          contract_number: string
+          created_at?: string
+          created_by: string
+          dbe_percentage?: number
+          final_report?: boolean
+          id?: string
+          original_amount: number
+          prime_contractor: string
+          report_date: string
+          tad_project_number: string
+          updated_at?: string
+        }
         Update: {
-          award_date?: string | null;
-          contract_number?: string;
-          created_at?: string;
-          created_by?: string;
-          dbe_percentage?: number | null;
-          final_report?: boolean | null;
-          id?: string;
-          original_amount?: number;
-          prime_contractor?: string;
-          report_date?: string | null;
-          tad_project_number?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          award_date?: string
+          contract_number?: string
+          created_at?: string
+          created_by?: string
+          dbe_percentage?: number
+          final_report?: boolean
+          id?: string
+          original_amount?: number
+          prime_contractor?: string
+          report_date?: string
+          tad_project_number?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
-          created_at: string;
-          email: string;
-          id: string;
-        };
+          created_at: string
+          email: string
+          id: string
+        }
         Insert: {
-          created_at?: string;
-          email: string;
-          id: string;
-        };
+          created_at?: string
+          email: string
+          id: string
+        }
         Update: {
-          created_at?: string;
-          email?: string;
-          id?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       subgrants: {
         Row: {
-          amount: number;
-          certified_dbe: boolean | null;
-          contract_id: string;
-          created_at: string;
-          created_by: string;
-          dbe_firm_name: string;
-          id: string;
-          naics_code: string;
-          // New fields:
-          contract_type: string;
-          award_date: string;
-          updated_at: string;
-        };
+          amount: number
+          award_date: string
+          certified_dbe: boolean
+          contract_id: string
+          contract_type: string
+          created_at: string
+          created_by: string
+          dbe_firm_name: string
+          id: string
+          naics_code: string
+          updated_at: string
+        }
         Insert: {
-          amount: number;
-          certified_dbe?: boolean | null;
-          contract_id: string;
-          created_at?: string;
-          created_by: string;
-          dbe_firm_name: string;
-          id?: string;
-          naics_code: string;
-          // New fields – marked as required here:
-          contract_type: string;
-          award_date: string;
-          updated_at?: string;
-        };
+          amount: number
+          award_date: string
+          certified_dbe: boolean
+          contract_id: string
+          contract_type?: string
+          created_at?: string
+          created_by: string
+          dbe_firm_name: string
+          id?: string
+          naics_code: string
+          updated_at?: string
+        }
         Update: {
-          amount?: number;
-          certified_dbe?: boolean | null;
-          contract_id?: string;
-          created_at?: string;
-          created_by?: string;
-          dbe_firm_name?: string;
-          id?: string;
-          naics_code?: string;
-          // New fields:
-          contract_type?: string;
-          award_date?: string;
-          updated_at?: string;
-        };
+          amount?: number
+          award_date?: string
+          certified_dbe?: boolean
+          contract_id?: string
+          contract_type?: string
+          created_at?: string
+          created_by?: string
+          dbe_firm_name?: string
+          id?: string
+          naics_code?: string
+          updated_at?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "subgrants_contract_id_fkey";
-            columns: ["contract_id"];
-            isOneToOne: false;
-            referencedRelation: "contracts";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
+            foreignKeyName: "subgrants_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
-          created_at: string;
-          id: string;
-          role: Database["public"]["Enums"]["app_role"];
-          user_id: string;
-        };
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
         Insert: {
-          created_at?: string;
-          id?: string;
-          role?: Database["public"]["Enums"]["app_role"];
-          user_id: string;
-        };
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
         Update: {
-          created_at?: string;
-          id?: string;
-          role?: Database["public"]["Enums"]["app_role"];
-          user_id?: string;
-        };
-        Relationships: [];
-      };
-    };
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
       has_role: {
         Args: {
-          role: Database["public"]["Enums"]["app_role"];
-        };
-        Returns: boolean;
-      };
-    };
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
+    }
     Enums: {
-      app_role: "admin" | "user";
-    };
+      app_role: "admin" | "user"
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database[Extract<keyof Database, "public">];
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -180,7 +177,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
@@ -188,11 +185,11 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R;
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -203,17 +200,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -224,17 +221,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -247,14 +244,14 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never;
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof PublicSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof Database
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
@@ -262,4 +259,4 @@ export type CompositeTypes<
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
+    : never

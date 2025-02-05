@@ -26,8 +26,8 @@ interface Subgrant {
   naics_code: string;
   amount: number;
   certified_dbe: boolean;
-  contract_type: string; // New field: Type of Contract
-  award_date: string;    // New field: Date of Award
+  contract_type: string;
+  award_date: string;
   created_at: string;
 }
 
@@ -67,30 +67,30 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
     <Table>
       <TableHeader>
         <TableRow>
-          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+          <TableHead className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
             DBE Firm
-          </th>
-          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
             NAICS Code
-          </th>
-          <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
             Amount
-          </th>
-          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
             Contract Type
-          </th>
-          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
             Award Date
-          </th>
-          <th className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-left font-medium text-muted-foreground w-auto">
             Date Created
-          </th>
-          <th className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-center font-medium text-muted-foreground w-auto">
             DBE Certified
-          </th>
-          <th className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
+          </TableHead>
+          <TableHead className="h-12 px-4 text-right font-medium text-muted-foreground w-auto">
             Actions
-          </th>
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -99,24 +99,27 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             <TableCell>{subgrant.dbe_firm_name}</TableCell>
             <TableCell className="font-mono">{subgrant.naics_code}</TableCell>
             <TableCell className="text-right font-mono">{formatCurrency(subgrant.amount)}</TableCell>
+            <TableCell>
+              <Select
+                value={subgrant.contract_type}
+                onValueChange={(value) => {
+                  // Handle contract type change
+                  console.log("Contract type changed:", value);
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Subcontract">Subcontract</SelectItem>
+                  <SelectItem value="Supplier">Supplier</SelectItem>
+                  <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+                </SelectContent>
+              </Select>
+            </TableCell>
             <TableCell>{formatDate(subgrant.award_date)}</TableCell>
             <TableCell>{formatDate(subgrant.created_at)}</TableCell>
             <TableCell className="text-center">
-            <Select
-              value={subgrant.contract_type}
-              onValueChange={(value) =>
-                setFormData({ ...formData, contractType: value })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a contract type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Subcontract">Subcontract</SelectItem>
-                <SelectItem value="Supplier">Supplier</SelectItem>
-                <SelectItem value="Manufacturer">Manufacturer</SelectItem>
-              </SelectContent>
-            </Select>
               <Select
                 value={subgrant.certified_dbe ? "yes" : "no"}
                 onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "yes")}
