@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Edit2 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
-import type { Subgrant } from "./ContractTable";
+import type { Subgrant } from "@/types/contracts";
 
 interface SubgrantTableProps {
   subgrants: Subgrant[];
