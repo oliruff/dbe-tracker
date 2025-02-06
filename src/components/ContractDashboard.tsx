@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { SearchFilters } from "./dashboard/SearchFilters";
 import { ContractTable } from "./dashboard/ContractTable";
-import type { Contract, Subgrant } from "./dashboard/ContractTable";
+import type { Contract, Subgrant } from "@/types/contracts";
 
 export const ContractDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,19 +23,7 @@ export const ContractDashboard = () => {
         .from("contracts")
         .select(`
           *,
-          subgrants (
-            id,
-            dbe_firm_name,
-            naics_code,
-            amount,
-            certified_dbe,
-            contract_type,
-            award_date,
-            created_at,
-            created_by,
-            updated_at,
-            contract_id
-          )
+          subgrants (*)
         `)
         .order("created_at", { ascending: false });
 

@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Contract, Subgrant } from "./dashboard/ContractTable";
+import type { Contract, Subgrant } from "@/types/contracts";
 
 export const EditContractForm = () => {
   const { contractId } = useParams();
