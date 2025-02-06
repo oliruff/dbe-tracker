@@ -15,7 +15,7 @@ import { Trash2, Edit2, ChevronDown, ChevronUp } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
 import { SubgrantTable } from "./SubgrantTable";
-import type { Contract, Subgrant } from "./ContractTable";
+import type { Contract } from "./ContractTable";
 
 interface ContractTableRowProps {
   contract: Contract;

@@ -7,6 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Contract, Subgrant } from "./dashboard/ContractTable";
 
 export const EditContractForm = () => {
   const { contractId } = useParams();
@@ -23,17 +31,22 @@ export const EditContractForm = () => {
     reportDate: "",
   });
 
+  const [subgrants, setSubgrants] = useState<Subgrant[]>([]);
+
   const { data: contract, isLoading } = useQuery({
     queryKey: ["contract", contractId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("contracts")
-        .select("*")
+        .select(`
+          *,
+          subgrants (*)
+        `)
         .eq("id", contractId)
         .single();
 
       if (error) throw error;
-      return data;
+      return data as Contract;
     },
   });
 
@@ -48,13 +61,14 @@ export const EditContractForm = () => {
         awardDate: contract.award_date || "",
         reportDate: contract.report_date || "",
       });
+      setSubgrants(contract.subgrants || []);
     }
   }, [contract]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { error } = await supabase
+      const { error: contractError } = await supabase
         .from("contracts")
         .update({
           tad_project_number: formData.tadProjectNumber,
@@ -62,15 +76,34 @@ export const EditContractForm = () => {
           prime_contractor: formData.primeContractor,
           original_amount: parseFloat(formData.originalAmount),
           dbe_percentage: parseFloat(formData.dbePercentage || "0"),
+          award_date: formData.awardDate,
+          report_date: formData.reportDate,
         })
         .eq("id", contractId);
 
-      if (error) throw error;
+      if (contractError) throw contractError;
+
+      // Update subgrants
+      for (const subgrant of subgrants) {
+        const { error: subgrantError } = await supabase
+          .from("subgrants")
+          .update({
+            dbe_firm_name: subgrant.dbe_firm_name,
+            naics_code: subgrant.naics_code,
+            amount: subgrant.amount,
+            certified_dbe: subgrant.certified_dbe,
+            contract_type: subgrant.contract_type,
+            award_date: subgrant.award_date,
+          })
+          .eq("id", subgrant.id);
+
+        if (subgrantError) throw subgrantError;
+      }
 
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
       toast({
         title: "Contract Updated",
-        description: "The contract has been successfully updated.",
+        description: "The contract and its subgrants have been successfully updated.",
       });
       navigate("/");
     } catch (error) {
@@ -81,6 +114,15 @@ export const EditContractForm = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleSubgrantChange = (index: number, field: keyof Subgrant, value: any) => {
+    const updatedSubgrants = [...subgrants];
+    updatedSubgrants[index] = {
+      ...updatedSubgrants[index],
+      [field]: value,
+    };
+    setSubgrants(updatedSubgrants);
   };
 
   if (isLoading) {
@@ -158,7 +200,121 @@ export const EditContractForm = () => {
               required
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="awardDate">Award Date</Label>
+            <Input
+              id="awardDate"
+              type="date"
+              value={formData.awardDate}
+              onChange={(e) =>
+                setFormData({ ...formData, awardDate: e.target.value })
+              }
+              className="w-full"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reportDate">Report Date</Label>
+            <Input
+              id="reportDate"
+              type="date"
+              value={formData.reportDate}
+              onChange={(e) =>
+                setFormData({ ...formData, reportDate: e.target.value })
+              }
+              className="w-full"
+              required
+            />
+          </div>
         </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Subgrants</h3>
+          {subgrants.map((subgrant, index) => (
+            <Card key={subgrant.id} className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>DBE Firm Name</Label>
+                  <Input
+                    value={subgrant.dbe_firm_name}
+                    onChange={(e) =>
+                      handleSubgrantChange(index, "dbe_firm_name", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>NAICS Code</Label>
+                  <Input
+                    value={subgrant.naics_code}
+                    onChange={(e) =>
+                      handleSubgrantChange(index, "naics_code", e.target.value)
+                    }
+                    pattern="\d{6}"
+                    maxLength={6}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Amount ($)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={subgrant.amount}
+                    onChange={(e) =>
+                      handleSubgrantChange(index, "amount", parseFloat(e.target.value))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Contract Type</Label>
+                  <Select
+                    value={subgrant.contract_type}
+                    onValueChange={(value) =>
+                      handleSubgrantChange(index, "contract_type", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Subcontract">Subcontract</SelectItem>
+                      <SelectItem value="Supplier">Supplier</SelectItem>
+                      <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Award Date</Label>
+                  <Input
+                    type="date"
+                    value={subgrant.award_date}
+                    onChange={(e) =>
+                      handleSubgrantChange(index, "award_date", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>DBE Certified</Label>
+                  <Select
+                    value={subgrant.certified_dbe ? "yes" : "no"}
+                    onValueChange={(value) =>
+                      handleSubgrantChange(index, "certified_dbe", value === "yes")
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
         <div className="flex justify-end gap-4">
           <Button
             type="button"
