@@ -82,6 +82,7 @@ export type Database = {
           created_at: string
           created_by: string
           dbe_firm_name: string
+          ethnicity_gender: string | null
           id: string
           naics_code: string
           updated_at: string
@@ -95,6 +96,7 @@ export type Database = {
           created_at?: string
           created_by: string
           dbe_firm_name: string
+          ethnicity_gender?: string | null
           id?: string
           naics_code: string
           updated_at?: string
@@ -108,6 +110,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           dbe_firm_name?: string
+          ethnicity_gender?: string | null
           id?: string
           naics_code?: string
           updated_at?: string
@@ -119,6 +122,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contracts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subgrants_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "ethnicity_gender_reports"
+            referencedColumns: ["contract_id"]
           },
         ]
       }
@@ -145,7 +155,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      ethnicity_gender_reports: {
+        Row: {
+          contract_id: string | null
+          contract_number: string | null
+          dbe_percentage: number | null
+          ethnicity_gender: string | null
+          original_amount: number | null
+          prime_contractor: string | null
+          subgrant_count: number | null
+          tad_project_number: string | null
+          total_amount: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {

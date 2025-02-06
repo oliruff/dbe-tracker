@@ -27,13 +27,13 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
     amount: "",
     contractType: "",
     certifiedDbe: "no",
-    awardDate: "", // New field for Date of Award
+    awardDate: "",
+    ethnicityGender: "", // New field for ethnicity/gender
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate NAICS code format (exactly 6 digits)
     if (!/^\d{6}$/.test(formData.naicsCode)) {
       toast({
         title: "Invalid NAICS Code",
@@ -53,14 +53,14 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         naics_code: formData.naicsCode,
         amount: parseFloat(formData.amount),
         certified_dbe: formData.certifiedDbe === "yes",
-        contract_type: formData.contractType,     // Save contract type
-        award_date: formData.awardDate,            // Save award date
+        contract_type: formData.contractType,
+        award_date: formData.awardDate,
+        ethnicity_gender: formData.ethnicityGender || null,
         created_by: user.id,
       });
 
       if (error) throw error;
 
-      // Reset form data after successful submission
       setFormData({
         dbeFirmName: "",
         naicsCode: "",
@@ -68,9 +68,9 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
         contractType: "",
         certifiedDbe: "no",
         awardDate: "",
+        ethnicityGender: "",
       });
 
-      // Invalidate queries so that the SubgrantTable refreshes automatically
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
 
       toast({
@@ -123,6 +123,33 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
                 <SelectItem value="Subcontract">Subcontract</SelectItem>
                 <SelectItem value="Supplier">Supplier</SelectItem>
                 <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="ethnicityGender">Ethnicity/Gender</Label>
+            <Select
+              value={formData.ethnicityGender}
+              onValueChange={(value) =>
+                setFormData({ ...formData, ethnicityGender: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select ethnicity/gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MBE-AIA">Asian Indian American Male (MBE-AIA)</SelectItem>
+                <SelectItem value="MBE-APA">Asian Pacific American Male (MBE-APA)</SelectItem>
+                <SelectItem value="MBE-BA">Black American Male (MBE-BA)</SelectItem>
+                <SelectItem value="MBE-HA">Hispanic American Male (MBE-HA)</SelectItem>
+                <SelectItem value="MBE-NA">Native American Male (MBE-NA)</SelectItem>
+                <SelectItem value="MFBE-AIA">Asian Indian American M/F (MFBE-AIA)</SelectItem>
+                <SelectItem value="MFBE-APA">Asian Pacific American M/F (MFBE-APA)</SelectItem>
+                <SelectItem value="MFBE-BA">Black American M/F (MFBE-BA)</SelectItem>
+                <SelectItem value="MFBE-HA">Hispanic American M/F (MFBE-HA)</SelectItem>
+                <SelectItem value="MFBE-NA">Native American M/F (MFBE-NA)</SelectItem>
+                <SelectItem value="WFBE">White Female (WFBE)</SelectItem>
+                <SelectItem value="WMBE">White Male (WMBE)</SelectItem>
               </SelectContent>
             </Select>
           </div>
