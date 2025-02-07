@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
@@ -65,19 +66,23 @@ const Reports = () => {
     let totalSubcontractCount = 0;
 
     selectedContractsData.forEach(contract => {
-      contract.subgrants?.forEach(subgrant => {
-        if (subgrant.certified_dbe && subgrant.ethnicity_gender) {
-          totalSubcontractAmount += subgrant.amount;
-          totalSubcontractCount++;
+      if (contract.subgrants) {
+        contract.subgrants.forEach(subgrant => {
+          if (subgrant.certified_dbe) {
+            totalSubcontractAmount += subgrant.amount;
+            totalSubcontractCount++;
 
-          const [ethnicity, gender] = subgrant.ethnicity_gender.split('/');
-          if (dbeBreakdown[ethnicity]) {
-            const genderKey = gender.toLowerCase() === 'female' ? 'women' : 'men';
-            dbeBreakdown[ethnicity][genderKey].amount += subgrant.amount;
-            dbeBreakdown[ethnicity][genderKey].count += 1;
+            if (subgrant.ethnicity_gender) {
+              const [ethnicity, gender] = subgrant.ethnicity_gender.split('/');
+              if (dbeBreakdown[ethnicity]) {
+                const genderKey = gender.toLowerCase() === 'female' ? 'women' : 'men';
+                dbeBreakdown[ethnicity][genderKey].amount += subgrant.amount;
+                dbeBreakdown[ethnicity][genderKey].count += 1;
+              }
+            }
           }
-        }
-      });
+        });
+      }
     });
 
     return {
@@ -164,8 +169,9 @@ const Reports = () => {
                       <th className="border p-2 text-left">Type</th>
                       <th className="border p-2 text-right">Total Dollars</th>
                       <th className="border p-2 text-right">Total Number</th>
-                      <th className="border p-2 text-right">Total to DBEs (dollars)</th>
-                      <th className="border p-2 text-right">Total to DBEs (number)</th>
+                      <th className="border p-2 text-right">Total to DBEs ($)</th>
+                      <th className="border p-2 text-right">Total to DBEs (#)</th>
+                      <th className="border p-2 text-right">% of Total Dollars to DBEs</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -179,6 +185,7 @@ const Reports = () => {
                       </td>
                       <td className="border p-2 text-right font-mono">$0</td>
                       <td className="border p-2 text-right font-mono">0</td>
+                      <td className="border p-2 text-right font-mono">0%</td>
                     </tr>
                     <tr>
                       <td className="border p-2">Subcontracts awarded/committed this period</td>
@@ -194,6 +201,11 @@ const Reports = () => {
                       <td className="border p-2 text-right font-mono">
                         {totals.subcontracts.count}
                       </td>
+                      <td className="border p-2 text-right font-mono">
+                        {totals.primeContracts.amount > 0 
+                          ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
+                          : '0%'}
+                      </td>
                     </tr>
                     <tr className="bg-gray-50 font-semibold">
                       <td className="border p-2">TOTAL</td>
@@ -208,6 +220,11 @@ const Reports = () => {
                       </td>
                       <td className="border p-2 text-right font-mono">
                         {totals.subcontracts.count}
+                      </td>
+                      <td className="border p-2 text-right font-mono">
+                        {totals.primeContracts.amount > 0 
+                          ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
+                          : '0%'}
                       </td>
                     </tr>
                   </tbody>
@@ -227,28 +244,37 @@ const Reports = () => {
                         <th className="border p-2 text-right">Women Count</th>
                         <th className="border p-2 text-right">Men Count</th>
                         <th className="border p-2 text-right">Total Count</th>
+                        <th className="border p-2 text-right">% of Total DBE</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(totals.dbeBreakdown).map(([category, data]) => (
-                        <tr key={category}>
-                          <td className="border p-2">{category}</td>
-                          <td className="border p-2 text-right font-mono">
-                            {formatCurrency(data.women.amount)}
-                          </td>
-                          <td className="border p-2 text-right font-mono">
-                            {formatCurrency(data.men.amount)}
-                          </td>
-                          <td className="border p-2 text-right font-mono">
-                            {formatCurrency(data.women.amount + data.men.amount)}
-                          </td>
-                          <td className="border p-2 text-right font-mono">{data.women.count}</td>
-                          <td className="border p-2 text-right font-mono">{data.men.count}</td>
-                          <td className="border p-2 text-right font-mono">
-                            {data.women.count + data.men.count}
-                          </td>
-                        </tr>
-                      ))}
+                      {Object.entries(totals.dbeBreakdown).map(([category, data]) => {
+                        const categoryTotal = data.women.amount + data.men.amount;
+                        const dbePercentage = totals.subcontracts.amount > 0
+                          ? ((categoryTotal / totals.subcontracts.amount) * 100).toFixed(2)
+                          : '0';
+                        
+                        return (
+                          <tr key={category}>
+                            <td className="border p-2">{category}</td>
+                            <td className="border p-2 text-right font-mono">
+                              {formatCurrency(data.women.amount)}
+                            </td>
+                            <td className="border p-2 text-right font-mono">
+                              {formatCurrency(data.men.amount)}
+                            </td>
+                            <td className="border p-2 text-right font-mono">
+                              {formatCurrency(categoryTotal)}
+                            </td>
+                            <td className="border p-2 text-right font-mono">{data.women.count}</td>
+                            <td className="border p-2 text-right font-mono">{data.men.count}</td>
+                            <td className="border p-2 text-right font-mono">
+                              {data.women.count + data.men.count}
+                            </td>
+                            <td className="border p-2 text-right font-mono">{dbePercentage}%</td>
+                          </tr>
+                        );
+                      })}
                       <tr className="bg-gray-50 font-semibold">
                         <td className="border p-2">TOTAL</td>
                         <td className="border p-2 text-right font-mono">
@@ -268,12 +294,7 @@ const Reports = () => {
                           )}
                         </td>
                         <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            Object.values(totals.dbeBreakdown).reduce(
-                              (sum, data) => sum + data.women.amount + data.men.amount,
-                              0
-                            )
-                          )}
+                          {formatCurrency(totals.subcontracts.amount)}
                         </td>
                         <td className="border p-2 text-right font-mono">
                           {Object.values(totals.dbeBreakdown).reduce(
@@ -288,11 +309,9 @@ const Reports = () => {
                           )}
                         </td>
                         <td className="border p-2 text-right font-mono">
-                          {Object.values(totals.dbeBreakdown).reduce(
-                            (sum, data) => sum + data.women.count + data.men.count,
-                            0
-                          )}
+                          {totals.subcontracts.count}
                         </td>
+                        <td className="border p-2 text-right font-mono">100%</td>
                       </tr>
                     </tbody>
                   </table>
