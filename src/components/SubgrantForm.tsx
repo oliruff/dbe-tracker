@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +29,7 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
     contractType: "",
     certifiedDbe: "no",
     awardDate: "",
-    ethnicityGender: "", // New field for ethnicity/gender
+    ethnicityGender: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -138,18 +139,18 @@ export const SubgrantForm = ({ contractId }: SubgrantFormProps) => {
                 <SelectValue placeholder="Select ethnicity/gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MBE-AIA">Asian Indian American Male (MBE-AIA)</SelectItem>
-                <SelectItem value="MBE-APA">Asian Pacific American Male (MBE-APA)</SelectItem>
-                <SelectItem value="MBE-BA">Black American Male (MBE-BA)</SelectItem>
-                <SelectItem value="MBE-HA">Hispanic American Male (MBE-HA)</SelectItem>
-                <SelectItem value="MBE-NA">Native American Male (MBE-NA)</SelectItem>
-                <SelectItem value="MFBE-AIA">Asian Indian American M/F (MFBE-AIA)</SelectItem>
-                <SelectItem value="MFBE-APA">Asian Pacific American M/F (MFBE-APA)</SelectItem>
-                <SelectItem value="MFBE-BA">Black American M/F (MFBE-BA)</SelectItem>
-                <SelectItem value="MFBE-HA">Hispanic American M/F (MFBE-HA)</SelectItem>
-                <SelectItem value="MFBE-NA">Native American M/F (MFBE-NA)</SelectItem>
-                <SelectItem value="WFBE">White Female (WFBE)</SelectItem>
-                <SelectItem value="WMBE">White Male (WMBE)</SelectItem>
+                <SelectItem value="Black American/Female">Black American Female</SelectItem>
+                <SelectItem value="Black American/Male">Black American Male</SelectItem>
+                <SelectItem value="Hispanic American/Female">Hispanic American Female</SelectItem>
+                <SelectItem value="Hispanic American/Male">Hispanic American Male</SelectItem>
+                <SelectItem value="Native American/Female">Native American Female</SelectItem>
+                <SelectItem value="Native American/Male">Native American Male</SelectItem>
+                <SelectItem value="Asian-Pacific American/Female">Asian-Pacific American Female</SelectItem>
+                <SelectItem value="Asian-Pacific American/Male">Asian-Pacific American Male</SelectItem>
+                <SelectItem value="Subcontinent Asian American/Female">Subcontinent Asian American Female</SelectItem>
+                <SelectItem value="Subcontinent Asian American/Male">Subcontinent Asian American Male</SelectItem>
+                <SelectItem value="Non-Minority/Female">Non-Minority Female</SelectItem>
+                <SelectItem value="Non-Minority/Male">Non-Minority Male</SelectItem>
               </SelectContent>
             </Select>
           </div>
