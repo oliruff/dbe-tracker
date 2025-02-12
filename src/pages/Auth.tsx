@@ -14,14 +14,22 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Check for existing session on mount
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    // Clear any invalid session state on component mount
+    const checkAndClearSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error?.message?.includes("Invalid Refresh Token") || error?.message?.includes("token not found")) {
+        // If there's an invalid token, sign out to clear the state
+        await supabase.auth.signOut();
+      } else if (session) {
+        // If we have a valid session, redirect
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
       }
-    });
+    };
+
+    checkAndClearSession();
   }, [navigate, location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,12 +37,15 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
+      // First, ensure we're starting with a clean state
+      await supabase.auth.signOut();
+
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
           },
         });
         if (error) throw error;
@@ -49,7 +60,8 @@ const Auth = () => {
         navigate(from, { replace: true });
       }
     } catch (error: any) {
-      toast.error(error.message);
+      console.error("Auth error:", error);
+      toast.error(error.message || "An error occurred during authentication");
     } finally {
       setIsLoading(false);
     }
