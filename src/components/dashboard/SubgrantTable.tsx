@@ -1,3 +1,4 @@
+
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -16,9 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit2 } from "lucide-react";
+import { Trash2, Edit2, Check, X } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import type { Subgrant } from "@/types/contracts";
 
 interface SubgrantTableProps {
@@ -29,6 +32,8 @@ interface SubgrantTableProps {
 export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTableProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Subgrant>>({});
 
   const handleDeleteSubgrant = async (subgrantId: string) => {
     try {
@@ -44,6 +49,67 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
       toast({
         title: "Error",
         description: "There was an error deleting the subgrant.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const startEditing = (subgrant: Subgrant) => {
+    setEditingId(subgrant.id);
+    setEditForm({
+      dbe_firm_name: subgrant.dbe_firm_name,
+      naics_code: subgrant.naics_code,
+      amount: subgrant.amount,
+      contract_type: subgrant.contract_type,
+      award_date: subgrant.award_date,
+      certified_dbe: subgrant.certified_dbe,
+      ethnicity_gender: subgrant.ethnicity_gender,
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditForm({});
+  };
+
+  const handleSaveEdit = async (subgrantId: string) => {
+    try {
+      if (!editForm.dbe_firm_name || !editForm.naics_code || !editForm.amount) {
+        toast({
+          title: "Validation Error",
+          description: "Please fill in all required fields.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from("subgrants")
+        .update({
+          dbe_firm_name: editForm.dbe_firm_name,
+          naics_code: editForm.naics_code,
+          amount: editForm.amount,
+          contract_type: editForm.contract_type,
+          award_date: editForm.award_date,
+          certified_dbe: editForm.certified_dbe,
+          ethnicity_gender: editForm.ethnicity_gender,
+        })
+        .eq("id", subgrantId);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
+      toast({
+        title: "Subgrant Updated",
+        description: "The subgrant has been successfully updated.",
+      });
+      setEditingId(null);
+      setEditForm({});
+    } catch (error) {
+      console.error("Error updating subgrant:", error);
+      toast({
+        title: "Error",
+        description: "There was an error updating the subgrant.",
         variant: "destructive",
       });
     }
@@ -86,16 +152,59 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
       <TableBody>
         {subgrants.map((subgrant) => (
           <TableRow key={subgrant.id} className="group">
-            <TableCell>{subgrant.dbe_firm_name}</TableCell>
-            <TableCell className="font-mono">{subgrant.naics_code}</TableCell>
-            <TableCell className="text-right font-mono">{formatCurrency(subgrant.amount)}</TableCell>
+            <TableCell>
+              {editingId === subgrant.id ? (
+                <Input
+                  value={editForm.dbe_firm_name || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, dbe_firm_name: e.target.value })
+                  }
+                  className="w-full"
+                />
+              ) : (
+                subgrant.dbe_firm_name
+              )}
+            </TableCell>
+            <TableCell className="font-mono">
+              {editingId === subgrant.id ? (
+                <Input
+                  value={editForm.naics_code || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, naics_code: e.target.value })
+                  }
+                  pattern="\d{6}"
+                  maxLength={6}
+                  className="w-full font-mono"
+                />
+              ) : (
+                subgrant.naics_code
+              )}
+            </TableCell>
+            <TableCell className="text-right font-mono">
+              {editingId === subgrant.id ? (
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={editForm.amount || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, amount: parseFloat(e.target.value) })
+                  }
+                  className="w-full text-right font-mono"
+                />
+              ) : (
+                formatCurrency(subgrant.amount)
+              )}
+            </TableCell>
             <TableCell>
               <Select
-                value={subgrant.contract_type}
-                onValueChange={(value) => {
-                  // Handle contract type change
-                  console.log("Contract type changed:", value);
-                }}
+                value={editingId === subgrant.id ? editForm.contract_type : subgrant.contract_type}
+                onValueChange={(value) =>
+                  editingId === subgrant.id
+                    ? setEditForm({ ...editForm, contract_type: value })
+                    : console.log("Contract type changed:", value)
+                }
+                disabled={editingId !== subgrant.id}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -107,12 +216,34 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
                 </SelectContent>
               </Select>
             </TableCell>
-            <TableCell>{formatDate(subgrant.award_date)}</TableCell>
+            <TableCell>
+              {editingId === subgrant.id ? (
+                <Input
+                  type="date"
+                  value={editForm.award_date || ""}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, award_date: e.target.value })
+                  }
+                  className="w-full"
+                />
+              ) : (
+                formatDate(subgrant.award_date)
+              )}
+            </TableCell>
             <TableCell>{formatDate(subgrant.created_at)}</TableCell>
             <TableCell className="text-center">
               <Select
-                value={subgrant.certified_dbe ? "yes" : "no"}
-                onValueChange={(value) => updateSubgrantDBE(subgrant.id, value === "yes")}
+                value={
+                  editingId === subgrant.id
+                    ? editForm.certified_dbe ? "yes" : "no"
+                    : subgrant.certified_dbe ? "yes" : "no"
+                }
+                onValueChange={(value) =>
+                  editingId === subgrant.id
+                    ? setEditForm({ ...editForm, certified_dbe: value === "yes" })
+                    : updateSubgrantDBE(subgrant.id, value === "yes")
+                }
+                disabled={editingId !== subgrant.id}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -125,16 +256,41 @@ export const SubgrantTable = ({ subgrants, updateSubgrantDBE }: SubgrantTablePro
             </TableCell>
             <TableCell className="text-right">
               <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDeleteSubgrant(subgrant.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
+                {editingId === subgrant.id ? (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleSaveEdit(subgrant.id)}
+                    >
+                      <Check className="h-4 w-4 text-green-500" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={cancelEditing}
+                    >
+                      <X className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteSubgrant(subgrant.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => startEditing(subgrant)}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
               </div>
             </TableCell>
           </TableRow>
