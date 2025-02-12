@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
@@ -98,7 +97,60 @@ const Reports = () => {
     };
   };
 
+  const calculatePayments = () => {
+    if (!contracts) return {
+      ongoingContracts: { count: 0, amount: 0, dbeAmount: 0, dbeCount: 0 },
+      completedContracts: { 
+        raceConscious: { count: 0, amount: 0, dbeNeeded: 0, dbeParticipation: 0 },
+        raceNeutral: { count: 0, amount: 0, dbeNeeded: 0, dbeParticipation: 0 }
+      }
+    };
+
+    const selectedContractsData = contracts.filter(
+      contract => selectedContracts.length === 0 || selectedContracts.includes(contract.id)
+    );
+
+    const ongoingContracts = selectedContractsData.filter(c => !c.final_report);
+    const ongoingDbeCounts = ongoingContracts.reduce((acc, contract) => {
+      if (contract.subgrants) {
+        acc.dbeCount += contract.subgrants.filter(s => s.certified_dbe).length;
+        acc.dbeAmount += contract.subgrants.reduce((sum, s) => s.certified_dbe ? sum + s.amount : sum, 0);
+      }
+      return acc;
+    }, { dbeCount: 0, dbeAmount: 0 });
+
+    const completedContracts = selectedContractsData.filter(c => c.final_report);
+    const completedContractTotals = completedContracts.reduce((acc, contract) => {
+      const isRaceConscious = contract.dbe_percentage > 0;
+      const category = isRaceConscious ? 'raceConscious' : 'raceNeutral';
+      
+      acc[category].count += 1;
+      acc[category].amount += contract.original_amount;
+      acc[category].dbeNeeded += (contract.original_amount * contract.dbe_percentage / 100);
+      if (contract.subgrants) {
+        acc[category].dbeParticipation += contract.subgrants
+          .filter(s => s.certified_dbe)
+          .reduce((sum, s) => sum + s.amount, 0);
+      }
+      
+      return acc;
+    }, {
+      raceConscious: { count: 0, amount: 0, dbeNeeded: 0, dbeParticipation: 0 },
+      raceNeutral: { count: 0, amount: 0, dbeNeeded: 0, dbeParticipation: 0 }
+    });
+
+    return {
+      ongoingContracts: {
+        count: ongoingContracts.length,
+        amount: ongoingContracts.reduce((sum, c) => sum + c.original_amount, 0),
+        ...ongoingDbeCounts
+      },
+      completedContracts: completedContractTotals
+    };
+  };
+
   const totals = calculateTotals();
+  const payments = calculatePayments();
 
   const handleContractSelection = (contractId: string) => {
     setSelectedContracts(prev => 
@@ -312,6 +364,140 @@ const Reports = () => {
                           {totals.subcontracts.count}
                         </td>
                         <td className="border p-2 text-right font-mono">100%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-4">Payments Made this Period</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="border p-2 text-left">Payment Type</th>
+                        <th className="border p-2 text-right">Total Number</th>
+                        <th className="border p-2 text-right">Total Dollars</th>
+                        <th className="border p-2 text-right">DBE Payments ($)</th>
+                        <th className="border p-2 text-right">DBE Firms Paid</th>
+                        <th className="border p-2 text-right">% to DBE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border p-2">Prime and subcontracts currently in progress</td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.ongoingContracts.count}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.ongoingContracts.amount)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.ongoingContracts.dbeAmount)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.ongoingContracts.dbeCount}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.ongoingContracts.amount > 0 
+                            ? `${((payments.ongoingContracts.dbeAmount / payments.ongoingContracts.amount) * 100).toFixed(2)}%`
+                            : '0%'}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-4">Total Payments on Completed Contracts</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="border p-2 text-left">Category</th>
+                        <th className="border p-2 text-right">Number of Contracts</th>
+                        <th className="border p-2 text-right">Total Value</th>
+                        <th className="border p-2 text-right">DBE Goal Amount</th>
+                        <th className="border p-2 text-right">DBE Participation</th>
+                        <th className="border p-2 text-right">% to DBE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border p-2">Race Conscious</td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.completedContracts.raceConscious.count}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceConscious.amount)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceConscious.dbeNeeded)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceConscious.dbeParticipation)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.completedContracts.raceConscious.amount > 0 
+                            ? `${((payments.completedContracts.raceConscious.dbeParticipation / payments.completedContracts.raceConscious.amount) * 100).toFixed(2)}%`
+                            : '0%'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border p-2">Race Neutral</td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.completedContracts.raceNeutral.count}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceNeutral.amount)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceNeutral.dbeNeeded)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(payments.completedContracts.raceNeutral.dbeParticipation)}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.completedContracts.raceNeutral.amount > 0 
+                            ? `${((payments.completedContracts.raceNeutral.dbeParticipation / payments.completedContracts.raceNeutral.amount) * 100).toFixed(2)}%`
+                            : '0%'}
+                        </td>
+                      </tr>
+                      <tr className="bg-gray-50 font-semibold">
+                        <td className="border p-2">Total</td>
+                        <td className="border p-2 text-right font-mono">
+                          {payments.completedContracts.raceConscious.count + 
+                           payments.completedContracts.raceNeutral.count}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(
+                            payments.completedContracts.raceConscious.amount + 
+                            payments.completedContracts.raceNeutral.amount
+                          )}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(
+                            payments.completedContracts.raceConscious.dbeNeeded + 
+                            payments.completedContracts.raceNeutral.dbeNeeded
+                          )}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {formatCurrency(
+                            payments.completedContracts.raceConscious.dbeParticipation + 
+                            payments.completedContracts.raceNeutral.dbeParticipation
+                          )}
+                        </td>
+                        <td className="border p-2 text-right font-mono">
+                          {(payments.completedContracts.raceConscious.amount + 
+                            payments.completedContracts.raceNeutral.amount) > 0 
+                            ? `${(((payments.completedContracts.raceConscious.dbeParticipation + 
+                                   payments.completedContracts.raceNeutral.dbeParticipation) / 
+                                  (payments.completedContracts.raceConscious.amount + 
+                                   payments.completedContracts.raceNeutral.amount)) * 100).toFixed(2)}%`
+                            : '0%'}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
