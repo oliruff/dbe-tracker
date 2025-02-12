@@ -180,7 +180,7 @@ const Reports = () => {
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex justify-between items-center">
-            <div>
+            <div className="text-center w-full">
               <h1 className="text-3xl font-bold text-tdot-gray">DBE Achievement Report</h1>
               <p className="text-gray-600 mt-2">
                 Uniform Report of DBE Awards/Commitments and Payments
@@ -201,7 +201,7 @@ const Reports = () => {
           <Card className="p-6">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Awards/Commitments this Reporting Period</h2>
+                <h2 className="text-xl font-semibold text-center w-full">Awards/Commitments this Reporting Period</h2>
                 <Select value={reportPeriod} onValueChange={setReportPeriod}>
                   <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Select period" />
