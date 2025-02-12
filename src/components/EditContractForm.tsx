@@ -30,6 +30,7 @@ export const EditContractForm = () => {
     dbePercentage: "",
     awardDate: "",
     reportDate: "",
+    finalReport: "no", // Added final report field
   });
 
   const [subgrants, setSubgrants] = useState<Subgrant[]>([]);
@@ -61,6 +62,7 @@ export const EditContractForm = () => {
         dbePercentage: contract.dbe_percentage.toString(),
         awardDate: contract.award_date || "",
         reportDate: contract.report_date || "",
+        finalReport: contract.final_report ? "yes" : "no", // Set final report value
       });
       setSubgrants(contract.subgrants || []);
     }
@@ -79,6 +81,7 @@ export const EditContractForm = () => {
           dbe_percentage: parseFloat(formData.dbePercentage || "0"),
           award_date: formData.awardDate,
           report_date: formData.reportDate,
+          final_report: formData.finalReport === "yes", // Include final report in update
         })
         .eq("id", contractId);
 
@@ -200,6 +203,23 @@ export const EditContractForm = () => {
               className="w-full"
               required
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="finalReport">Final Report</Label>
+            <Select
+              value={formData.finalReport}
+              onValueChange={(value) =>
+                setFormData({ ...formData, finalReport: value })
+              }
+            >
+              <SelectTrigger id="finalReport" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="awardDate">Award Date</Label>
