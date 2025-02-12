@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
@@ -180,14 +179,12 @@ const Reports = () => {
       <Header />
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex justify-between items-center">
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-tdot-gray text-center">DBE Achievement Report</h1>
-              <p className="text-gray-600 mt-2 text-center">
-                Uniform Report of DBE Awards/Commitments and Payments
-              </p>
-            </div>
-            <div className="flex gap-2">
+          <div className="flex flex-col items-center mb-8">
+            <h1 className="text-3xl font-bold text-tdot-gray mb-2">DBE Achievement Report</h1>
+            <p className="text-gray-600">
+              Uniform Report of DBE Awards/Commitments and Payments
+            </p>
+            <div className="absolute right-4 flex gap-2">
               <Button variant="outline" onClick={handlePrint}>
                 <Printer className="h-4 w-4 mr-2" />
                 Print
