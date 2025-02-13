@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
@@ -178,52 +177,67 @@ const Reports = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="container mx-auto px-4 pt-24 pb-12">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col items-center mb-8">
-            <h1 className="text-3xl font-bold text-tdot-gray mb-2">UNIFORM REPORT OF DBE COMMITMENTS/AWARDS AND PAYMENTS</h1>
-            <div className="grid grid-cols-1 gap-4 w-full max-w-4xl mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="font-semibold">1. FAA AIP Numbers:</p>
-                  <input type="text" className="mt-1 p-2 border rounded w-full" placeholder="Enter AIP Numbers" />
-                </div>
-                <div>
-                  <p className="font-semibold">2. Annual DBE Goal(s):</p>
-                  <div className="flex gap-2 items-center mt-1">
-                    <span>Race Conscious:</span>
-                    <input
-                      type="number"
-                      className="p-2 border rounded w-24"
-                      placeholder="0.00"
-                      min="0"
-                      max="100"
-                      step="0.01"
+      <main className="container max-w-[1400px] mx-auto px-6 pt-24 pb-12">
+        <div className="space-y-8">
+          {/* Report Header Section */}
+          <div className="relative bg-white rounded-lg shadow-sm p-8">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-2xl font-bold text-tdot-gray text-center mb-8">
+                UNIFORM REPORT OF DBE COMMITMENTS/AWARDS AND PAYMENTS
+              </h1>
+              
+              <div className="grid grid-cols-1 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* AIP Numbers */}
+                  <div className="space-y-2">
+                    <p className="font-semibold text-sm text-gray-700">1. FAA AIP Numbers:</p>
+                    <input 
+                      type="text" 
+                      className="w-full p-2.5 border rounded-md bg-gray-50 focus:ring-2 focus:ring-tdot-blue focus:border-transparent" 
+                      placeholder="Enter AIP Numbers" 
                     />
-                    <span>%</span>
                   </div>
-                  <div className="flex gap-2 items-center mt-2">
-                    <span>Race Neutral:</span>
-                    <input
-                      type="number"
-                      className="p-2 border rounded w-24"
-                      placeholder="0.00"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                    />
-                    <span>%</span>
+                  
+                  {/* DBE Goals */}
+                  <div className="space-y-3">
+                    <p className="font-semibold text-sm text-gray-700">2. Annual DBE Goal(s):</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm w-28">Race Conscious:</span>
+                        <input
+                          type="number"
+                          className="p-2 border rounded-md w-24 bg-gray-50 focus:ring-2 focus:ring-tdot-blue focus:border-transparent"
+                          placeholder="0.00"
+                          min="0"
+                          max="100"
+                          step="0.01"
+                        />
+                        <span className="text-sm">%</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm w-28">Race Neutral:</span>
+                        <input
+                          type="number"
+                          className="p-2 border rounded-md w-24 bg-gray-50 focus:ring-2 focus:ring-tdot-blue focus:border-transparent"
+                          placeholder="0.00"
+                          min="0"
+                          max="100"
+                          step="0.01"
+                        />
+                        <span className="text-sm">%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="mt-4">
-                <p className="font-semibold">3. Agency:</p>
-                <div className="flex gap-4 mt-1">
-                  <label className="flex items-center">
+
+                {/* Agency Selection */}
+                <div className="space-y-2">
+                  <p className="font-semibold text-sm text-gray-700">3. Agency:</p>
+                  <label className="flex items-center gap-2 text-sm">
                     <input
                       type="radio"
                       name="submittedTo"
-                      className="mr-2"
+                      className="w-4 h-4 text-tdot-blue"
                       value="FAA"
                       checked
                       readOnly
@@ -233,24 +247,28 @@ const Reports = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute right-4 flex gap-2">
-              <Button variant="outline" onClick={handlePrint}>
+
+            {/* Action Buttons */}
+            <div className="absolute top-8 right-8 flex gap-3">
+              <Button variant="outline" onClick={handlePrint} className="h-9">
                 <Printer className="h-4 w-4 mr-2" />
                 Print
               </Button>
-              <Button>
+              <Button className="h-9">
                 <Download className="h-4 w-4 mr-2" />
                 Export PDF
               </Button>
             </div>
           </div>
 
-          <Card className="p-6">
+          {/* Report Content */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Awards/Commitments this Reporting Period</h2>
+              {/* Period Selection */}
+              <div className="flex justify-between items-center border-b pb-4">
+                <h2 className="text-lg font-semibold text-gray-800">Awards/Commitments this Reporting Period</h2>
                 <Select value={reportPeriod} onValueChange={setReportPeriod}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-[280px]">
                     <SelectValue placeholder="Select period" />
                   </SelectTrigger>
                   <SelectContent>
@@ -261,353 +279,356 @@ const Reports = () => {
                 </Select>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="border p-2 text-left">Type</th>
-                      <th className="border p-2 text-right">Total Dollars</th>
-                      <th className="border p-2 text-right">Total Number</th>
-                      <th className="border p-2 text-right">Total to DBEs ($)</th>
-                      <th className="border p-2 text-right">Total to DBEs (#)</th>
-                      <th className="border p-2 text-right">Total to DBE/Race Conscious ($)</th>
-                      <th className="border p-2 text-right">Total to DBE/Race Conscious (#)</th>
-                      <th className="border p-2 text-right">Total to DBE/Race Neutral ($)</th>
-                      <th className="border p-2 text-right">Total to DBE/Race Neutral (#)</th>
-                      <th className="border p-2 text-right">Percentage of total dollars to DBEs</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border p-2">Prime contracts awarded this period</td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.primeContracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.primeContracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">$0</td>
-                      <td className="border p-2 text-right font-mono">0</td>
-                      <td className="border p-2 text-right font-mono">$0</td>
-                      <td className="border p-2 text-right font-mono">0</td>
-                      <td className="border p-2 text-right font-mono">$0</td>
-                      <td className="border p-2 text-right font-mono">0</td>
-                      <td className="border p-2 text-right font-mono">0%</td>
-                    </tr>
-                    <tr>
-                      <td className="border p-2">Subcontracts awarded/committed this period</td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">$0</td>
-                      <td className="border p-2 text-right font-mono">0</td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.primeContracts.amount > 0 
-                          ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
-                          : '0%'}
-                      </td>
-                    </tr>
-                    <tr className="bg-gray-50 font-semibold">
-                      <td className="border p-2">TOTAL</td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.primeContracts.amount + totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.primeContracts.count + totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {formatCurrency(totals.subcontracts.amount)}
-                      </td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.subcontracts.count}
-                      </td>
-                      <td className="border p-2 text-right font-mono">$0</td>
-                      <td className="border p-2 text-right font-mono">0</td>
-                      <td className="border p-2 text-right font-mono">
-                        {totals.primeContracts.amount > 0 
-                          ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
-                          : '0%'}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">Breakdown by Ethnicity & Gender</h3>
-                <div className="overflow-x-auto">
+              {/* Tables */}
+              <div className="space-y-8">
+                <div className="overflow-x-auto rounded-lg border">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border p-2 text-left">Category</th>
-                        <th className="border p-2 text-right">Women Total ($)</th>
-                        <th className="border p-2 text-right">Men Total ($)</th>
-                        <th className="border p-2 text-right">Combined Total ($)</th>
-                        <th className="border p-2 text-right">Women Count</th>
-                        <th className="border p-2 text-right">Men Count</th>
-                        <th className="border p-2 text-right">Total Count</th>
-                        <th className="border p-2 text-right">% of Total DBE</th>
+                      <tr className="bg-gray-50 text-sm">
+                        <th className="border-b p-3 text-left font-medium text-gray-600">Type</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600">Total Dollars</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600">Total Number</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBEs ($)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBEs (#)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBE/Race Conscious ($)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBE/Race Conscious (#)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBE/Race Neutral ($)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">Total to DBE/Race Neutral (#)</th>
+                        <th className="border-b p-3 text-right font-medium text-gray-600 whitespace-nowrap">% of Total Dollars to DBEs</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {Object.entries(totals.dbeBreakdown).map(([category, data]) => {
-                        const categoryTotal = data.women.amount + data.men.amount;
-                        const dbePercentage = totals.subcontracts.amount > 0
-                          ? ((categoryTotal / totals.subcontracts.amount) * 100).toFixed(2)
-                          : '0';
-                        
-                        return (
-                          <tr key={category}>
-                            <td className="border p-2">{category}</td>
-                            <td className="border p-2 text-right font-mono">
-                              {formatCurrency(data.women.amount)}
-                            </td>
-                            <td className="border p-2 text-right font-mono">
-                              {formatCurrency(data.men.amount)}
-                            </td>
-                            <td className="border p-2 text-right font-mono">
-                              {formatCurrency(categoryTotal)}
-                            </td>
-                            <td className="border p-2 text-right font-mono">{data.women.count}</td>
-                            <td className="border p-2 text-right font-mono">{data.men.count}</td>
-                            <td className="border p-2 text-right font-mono">
-                              {data.women.count + data.men.count}
-                            </td>
-                            <td className="border p-2 text-right font-mono">{dbePercentage}%</td>
-                          </tr>
-                        );
-                      })}
-                      <tr className="bg-gray-50 font-semibold">
-                        <td className="border p-2">TOTAL</td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            Object.values(totals.dbeBreakdown).reduce(
-                              (sum, data) => sum + data.women.amount,
-                              0
-                            )
-                          )}
+                    <tbody className="text-sm">
+                      <tr>
+                        <td className="border-b p-3">Prime contracts awarded this period</td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.primeContracts.amount)}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            Object.values(totals.dbeBreakdown).reduce(
-                              (sum, data) => sum + data.men.amount,
-                              0
-                            )
-                          )}
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.primeContracts.count}
                         </td>
-                        <td className="border p-2 text-right font-mono">
+                        <td className="border-b p-3 text-right font-mono">$0</td>
+                        <td className="border-b p-3 text-right font-mono">0</td>
+                        <td className="border-b p-3 text-right font-mono">$0</td>
+                        <td className="border-b p-3 text-right font-mono">0</td>
+                        <td className="border-b p-3 text-right font-mono">$0</td>
+                        <td className="border-b p-3 text-right font-mono">0</td>
+                        <td className="border-b p-3 text-right font-mono">0%</td>
+                      </tr>
+                      <tr>
+                        <td className="border-b p-3">Subcontracts awarded/committed this period</td>
+                        <td className="border-b p-3 text-right font-mono">
                           {formatCurrency(totals.subcontracts.amount)}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {Object.values(totals.dbeBreakdown).reduce(
-                            (sum, data) => sum + data.women.count,
-                            0
-                          )}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {Object.values(totals.dbeBreakdown).reduce(
-                            (sum, data) => sum + data.men.count,
-                            0
-                          )}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
+                        <td className="border-b p-3 text-right font-mono">
                           {totals.subcontracts.count}
                         </td>
-                        <td className="border p-2 text-right font-mono">100%</td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.subcontracts.amount)}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.subcontracts.count}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.subcontracts.amount)}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.subcontracts.count}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">$0</td>
+                        <td className="border-b p-3 text-right font-mono">0</td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.primeContracts.amount > 0 
+                            ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
+                            : '0%'}
+                        </td>
                       </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">Payments Made this Period</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border p-2 text-left">Payment Type</th>
-                        <th className="border p-2 text-right">Total Number</th>
-                        <th className="border p-2 text-right">Total Dollars</th>
-                        <th className="border p-2 text-right">DBE Payments ($)</th>
-                        <th className="border p-2 text-right">DBE Firms Paid</th>
-                        <th className="border p-2 text-right">% to DBE</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border p-2">Prime and subcontracts currently in progress</td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.ongoingContracts.count}
+                      <tr className="bg-gray-50 font-medium">
+                        <td className="border-b p-3">TOTAL</td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.primeContracts.amount + totals.subcontracts.amount)}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.ongoingContracts.amount)}
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.primeContracts.count + totals.subcontracts.count}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.ongoingContracts.dbeAmount)}
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.subcontracts.amount)}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.ongoingContracts.dbeCount}
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.subcontracts.count}
                         </td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.ongoingContracts.amount > 0 
-                            ? `${((payments.ongoingContracts.dbeAmount / payments.ongoingContracts.amount) * 100).toFixed(2)}%`
+                        <td className="border-b p-3 text-right font-mono">
+                          {formatCurrency(totals.subcontracts.amount)}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.subcontracts.count}
+                        </td>
+                        <td className="border-b p-3 text-right font-mono">$0</td>
+                        <td className="border-b p-3 text-right font-mono">0</td>
+                        <td className="border-b p-3 text-right font-mono">
+                          {totals.primeContracts.amount > 0 
+                            ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
                             : '0%'}
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </div>
 
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">Total Payments on Completed Contracts</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border p-2 text-left">Category</th>
-                        <th className="border p-2 text-right">Number of Contracts</th>
-                        <th className="border p-2 text-right">Total Value</th>
-                        <th className="border p-2 text-right">DBE Goal Amount</th>
-                        <th className="border p-2 text-right">DBE Participation</th>
-                        <th className="border p-2 text-right">% to DBE</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border p-2">Race Conscious</td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.completedContracts.raceConscious.count}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceConscious.amount)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceConscious.dbeNeeded)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceConscious.dbeParticipation)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.completedContracts.raceConscious.amount > 0 
-                            ? `${((payments.completedContracts.raceConscious.dbeParticipation / payments.completedContracts.raceConscious.amount) * 100).toFixed(2)}%`
-                            : '0%'}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border p-2">Race Neutral</td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.completedContracts.raceNeutral.count}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceNeutral.amount)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceNeutral.dbeNeeded)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(payments.completedContracts.raceNeutral.dbeParticipation)}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.completedContracts.raceNeutral.amount > 0 
-                            ? `${((payments.completedContracts.raceNeutral.dbeParticipation / payments.completedContracts.raceNeutral.amount) * 100).toFixed(2)}%`
-                            : '0%'}
-                        </td>
-                      </tr>
-                      <tr className="bg-gray-50 font-semibold">
-                        <td className="border p-2">Total</td>
-                        <td className="border p-2 text-right font-mono">
-                          {payments.completedContracts.raceConscious.count + 
-                           payments.completedContracts.raceNeutral.count}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            payments.completedContracts.raceConscious.amount + 
-                            payments.completedContracts.raceNeutral.amount
-                          )}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            payments.completedContracts.raceConscious.dbeNeeded + 
-                            payments.completedContracts.raceNeutral.dbeNeeded
-                          )}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {formatCurrency(
-                            payments.completedContracts.raceConscious.dbeParticipation + 
-                            payments.completedContracts.raceNeutral.dbeParticipation
-                          )}
-                        </td>
-                        <td className="border p-2 text-right font-mono">
-                          {(payments.completedContracts.raceConscious.amount + 
-                            payments.completedContracts.raceNeutral.amount) > 0 
-                            ? `${(((payments.completedContracts.raceConscious.dbeParticipation + 
-                                   payments.completedContracts.raceNeutral.dbeParticipation) / 
-                                  (payments.completedContracts.raceConscious.amount + 
-                                   payments.completedContracts.raceNeutral.amount)) * 100).toFixed(2)}%`
-                            : '0%'}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {isLoading ? (
-                <div className="text-center py-8">Loading report data...</div>
-              ) : (
                 <div className="mt-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Contracts Selection</h3>
-                    <Button variant="outline" onClick={handleSelectAll}>
-                      {contracts && selectedContracts.length === contracts.length ? "Deselect All" : "Select All"}
-                    </Button>
+                  <h3 className="text-lg font-semibold mb-4">Breakdown by Ethnicity & Gender</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border p-2 text-left">Category</th>
+                          <th className="border p-2 text-right">Women Total ($)</th>
+                          <th className="border p-2 text-right">Men Total ($)</th>
+                          <th className="border p-2 text-right">Combined Total ($)</th>
+                          <th className="border p-2 text-right">Women Count</th>
+                          <th className="border p-2 text-right">Men Count</th>
+                          <th className="border p-2 text-right">Total Count</th>
+                          <th className="border p-2 text-right">% of Total DBE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(totals.dbeBreakdown).map(([category, data]) => {
+                          const categoryTotal = data.women.amount + data.men.amount;
+                          const dbePercentage = totals.subcontracts.amount > 0
+                            ? ((categoryTotal / totals.subcontracts.amount) * 100).toFixed(2)
+                            : '0';
+                          
+                          return (
+                            <tr key={category}>
+                              <td className="border p-2">{category}</td>
+                              <td className="border p-2 text-right font-mono">
+                                {formatCurrency(data.women.amount)}
+                              </td>
+                              <td className="border p-2 text-right font-mono">
+                                {formatCurrency(data.men.amount)}
+                              </td>
+                              <td className="border p-2 text-right font-mono">
+                                {formatCurrency(categoryTotal)}
+                              </td>
+                              <td className="border p-2 text-right font-mono">{data.women.count}</td>
+                              <td className="border p-2 text-right font-mono">{data.men.count}</td>
+                              <td className="border p-2 text-right font-mono">
+                                {data.women.count + data.men.count}
+                              </td>
+                              <td className="border p-2 text-right font-mono">{dbePercentage}%</td>
+                            </tr>
+                          );
+                        })}
+                        <tr className="bg-gray-50 font-semibold">
+                          <td className="border p-2">TOTAL</td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(
+                              Object.values(totals.dbeBreakdown).reduce(
+                                (sum, data) => sum + data.women.amount,
+                                0
+                              )
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(
+                              Object.values(totals.dbeBreakdown).reduce(
+                                (sum, data) => sum + data.men.amount,
+                                0
+                              )
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(totals.subcontracts.amount)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {Object.values(totals.dbeBreakdown).reduce(
+                              (sum, data) => sum + data.women.count,
+                              0
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {Object.values(totals.dbeBreakdown).reduce(
+                              (sum, data) => sum + data.men.count,
+                              0
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {totals.subcontracts.count}
+                          </td>
+                          <td className="border p-2 text-right font-mono">100%</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div className="space-y-2">
-                    {contracts?.map(contract => (
-                      <div
-                        key={contract.id}
-                        className="flex items-center space-x-4 p-4 bg-white rounded-lg border"
-                      >
-                        <Checkbox
-                          checked={selectedContracts.includes(contract.id)}
-                          onCheckedChange={() => handleContractSelection(contract.id)}
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium">{contract.contract_number}</div>
-                          <div className="text-sm text-gray-600">
-                            {contract.prime_contractor} - {formatCurrency(contract.original_amount)}
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Payments Made this Period</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border p-2 text-left">Payment Type</th>
+                          <th className="border p-2 text-right">Total Number</th>
+                          <th className="border p-2 text-right">Total Dollars</th>
+                          <th className="border p-2 text-right">DBE Payments ($)</th>
+                          <th className="border p-2 text-right">DBE Firms Paid</th>
+                          <th className="border p-2 text-right">% to DBE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border p-2">Prime and subcontracts currently in progress</td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.ongoingContracts.count}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.ongoingContracts.amount)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.ongoingContracts.dbeAmount)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.ongoingContracts.dbeCount}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.ongoingContracts.amount > 0 
+                              ? `${((payments.ongoingContracts.dbeAmount / payments.ongoingContracts.amount) * 100).toFixed(2)}%`
+                              : '0%'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Total Payments on Completed Contracts</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border p-2 text-left">Category</th>
+                          <th className="border p-2 text-right">Number of Contracts</th>
+                          <th className="border p-2 text-right">Total Value</th>
+                          <th className="border p-2 text-right">DBE Goal Amount</th>
+                          <th className="border p-2 text-right">DBE Participation</th>
+                          <th className="border p-2 text-right">% to DBE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border p-2">Race Conscious</td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.completedContracts.raceConscious.count}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceConscious.amount)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceConscious.dbeNeeded)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceConscious.dbeParticipation)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.completedContracts.raceConscious.amount > 0 
+                              ? `${((payments.completedContracts.raceConscious.dbeParticipation / payments.completedContracts.raceConscious.amount) * 100).toFixed(2)}%`
+                              : '0%'}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border p-2">Race Neutral</td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.completedContracts.raceNeutral.count}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceNeutral.amount)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceNeutral.dbeNeeded)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(payments.completedContracts.raceNeutral.dbeParticipation)}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.completedContracts.raceNeutral.amount > 0 
+                              ? `${((payments.completedContracts.raceNeutral.dbeParticipation / payments.completedContracts.raceNeutral.amount) * 100).toFixed(2)}%`
+                              : '0%'}
+                          </td>
+                        </tr>
+                        <tr className="bg-gray-50 font-semibold">
+                          <td className="border p-2">Total</td>
+                          <td className="border p-2 text-right font-mono">
+                            {payments.completedContracts.raceConscious.count + 
+                             payments.completedContracts.raceNeutral.count}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(
+                              payments.completedContracts.raceConscious.amount + 
+                              payments.completedContracts.raceNeutral.amount
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(
+                              payments.completedContracts.raceConscious.dbeNeeded + 
+                              payments.completedContracts.raceNeutral.dbeNeeded
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {formatCurrency(
+                              payments.completedContracts.raceConscious.dbeParticipation + 
+                              payments.completedContracts.raceNeutral.dbeParticipation
+                            )}
+                          </td>
+                          <td className="border p-2 text-right font-mono">
+                            {(payments.completedContracts.raceConscious.amount + 
+                              payments.completedContracts.raceNeutral.amount) > 0 
+                              ? `${(((payments.completedContracts.raceConscious.dbeParticipation + 
+                                     payments.completedContracts.raceNeutral.dbeParticipation) / 
+                                    (payments.completedContracts.raceConscious.amount + 
+                                     payments.completedContracts.raceNeutral.amount)) * 100).toFixed(2)}%`
+                              : '0%'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {isLoading ? (
+                  <div className="text-center py-8">Loading report data...</div>
+                ) : (
+                  <div className="mt-8">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold">Contracts Selection</h3>
+                      <Button variant="outline" onClick={handleSelectAll}>
+                        {contracts && selectedContracts.length === contracts.length ? "Deselect All" : "Select All"}
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      {contracts?.map(contract => (
+                        <div
+                          key={contract.id}
+                          className="flex items-center space-x-4 p-4 bg-white rounded-lg border"
+                        >
+                          <Checkbox
+                            checked={selectedContracts.includes(contract.id)}
+                            onCheckedChange={() => handleContractSelection(contract.id)}
+                          />
+                          <div className="flex-1">
+                            <div className="font-medium">{contract.contract_number}</div>
+                            <div className="text-sm text-gray-600">
+                              {contract.prime_contractor} - {formatCurrency(contract.original_amount)}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </Card>
+          </div>
         </div>
       </main>
     </div>
