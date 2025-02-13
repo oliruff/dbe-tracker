@@ -182,27 +182,55 @@ const Reports = () => {
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex flex-col items-center mb-8">
             <h1 className="text-3xl font-bold text-tdot-gray mb-2">UNIFORM REPORT OF DBE COMMITMENTS/AWARDS AND PAYMENTS</h1>
-            <div className="grid grid-cols-2 gap-4 w-full max-w-4xl mt-4 text-sm">
-              <div>
-                <p className="font-semibold">Submitted to (check only one):</p>
-                <div className="flex gap-4 mt-1">
-                  <label className="flex items-center">
-                    <input type="radio" name="submittedTo" className="mr-2" value="FHWA" />
-                    FHWA
-                  </label>
-                  <label className="flex items-center">
-                    <input type="radio" name="submittedTo" className="mr-2" value="FAA" />
-                    FAA
-                  </label>
-                  <label className="flex items-center">
-                    <input type="radio" name="submittedTo" className="mr-2" value="FTA" />
-                    FTA
-                  </label>
+            <div className="grid grid-cols-1 gap-4 w-full max-w-4xl mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="font-semibold">1. FAA AIP Numbers:</p>
+                  <input type="text" className="mt-1 p-2 border rounded w-full" placeholder="Enter AIP Numbers" />
+                </div>
+                <div>
+                  <p className="font-semibold">2. Annual DBE Goal(s):</p>
+                  <div className="flex gap-2 items-center mt-1">
+                    <span>Race Conscious:</span>
+                    <input
+                      type="number"
+                      className="p-2 border rounded w-24"
+                      placeholder="0.00"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                    />
+                    <span>%</span>
+                  </div>
+                  <div className="flex gap-2 items-center mt-2">
+                    <span>Race Neutral:</span>
+                    <input
+                      type="number"
+                      className="p-2 border rounded w-24"
+                      placeholder="0.00"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                    />
+                    <span>%</span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <p>FTA Recipient ID Number:</p>
-                <input type="text" className="mt-1 p-1 border rounded w-full" />
+              <div className="mt-4">
+                <p className="font-semibold">3. Agency:</p>
+                <div className="flex gap-4 mt-1">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="submittedTo"
+                      className="mr-2"
+                      value="FAA"
+                      checked
+                      readOnly
+                    />
+                    FAA
+                  </label>
+                </div>
               </div>
             </div>
             <div className="absolute right-4 flex gap-2">
