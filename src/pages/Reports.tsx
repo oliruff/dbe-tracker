@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
@@ -180,10 +181,30 @@ const Reports = () => {
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex flex-col items-center mb-8">
-            <h1 className="text-3xl font-bold text-tdot-gray mb-2">DBE Achievement Report</h1>
-            <p className="text-gray-600">
-              Uniform Report of DBE Awards/Commitments and Payments
-            </p>
+            <h1 className="text-3xl font-bold text-tdot-gray mb-2">UNIFORM REPORT OF DBE COMMITMENTS/AWARDS AND PAYMENTS</h1>
+            <div className="grid grid-cols-2 gap-4 w-full max-w-4xl mt-4 text-sm">
+              <div>
+                <p className="font-semibold">Submitted to (check only one):</p>
+                <div className="flex gap-4 mt-1">
+                  <label className="flex items-center">
+                    <input type="radio" name="submittedTo" className="mr-2" value="FHWA" />
+                    FHWA
+                  </label>
+                  <label className="flex items-center">
+                    <input type="radio" name="submittedTo" className="mr-2" value="FAA" />
+                    FAA
+                  </label>
+                  <label className="flex items-center">
+                    <input type="radio" name="submittedTo" className="mr-2" value="FTA" />
+                    FTA
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p>FTA Recipient ID Number:</p>
+                <input type="text" className="mt-1 p-1 border rounded w-full" />
+              </div>
+            </div>
             <div className="absolute right-4 flex gap-2">
               <Button variant="outline" onClick={handlePrint}>
                 <Printer className="h-4 w-4 mr-2" />
@@ -205,9 +226,9 @@ const Reports = () => {
                     <SelectValue placeholder="Select period" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="annual">Annual Report</SelectItem>
-                    <SelectItem value="june">June Report</SelectItem>
-                    <SelectItem value="december">December Report</SelectItem>
+                    <SelectItem value="june">Report due June 1 (Oct 1-Mar 31)</SelectItem>
+                    <SelectItem value="december">Report due Dec 1 (Apr 1-Sep 30)</SelectItem>
+                    <SelectItem value="annual">FAA annual report due Dec 1</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -221,7 +242,11 @@ const Reports = () => {
                       <th className="border p-2 text-right">Total Number</th>
                       <th className="border p-2 text-right">Total to DBEs ($)</th>
                       <th className="border p-2 text-right">Total to DBEs (#)</th>
-                      <th className="border p-2 text-right">% of Total Dollars to DBEs</th>
+                      <th className="border p-2 text-right">Total to DBE/Race Conscious ($)</th>
+                      <th className="border p-2 text-right">Total to DBE/Race Conscious (#)</th>
+                      <th className="border p-2 text-right">Total to DBE/Race Neutral ($)</th>
+                      <th className="border p-2 text-right">Total to DBE/Race Neutral (#)</th>
+                      <th className="border p-2 text-right">Percentage of total dollars to DBEs</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -233,6 +258,10 @@ const Reports = () => {
                       <td className="border p-2 text-right font-mono">
                         {totals.primeContracts.count}
                       </td>
+                      <td className="border p-2 text-right font-mono">$0</td>
+                      <td className="border p-2 text-right font-mono">0</td>
+                      <td className="border p-2 text-right font-mono">$0</td>
+                      <td className="border p-2 text-right font-mono">0</td>
                       <td className="border p-2 text-right font-mono">$0</td>
                       <td className="border p-2 text-right font-mono">0</td>
                       <td className="border p-2 text-right font-mono">0%</td>
@@ -251,6 +280,14 @@ const Reports = () => {
                       <td className="border p-2 text-right font-mono">
                         {totals.subcontracts.count}
                       </td>
+                      <td className="border p-2 text-right font-mono">
+                        {formatCurrency(totals.subcontracts.amount)}
+                      </td>
+                      <td className="border p-2 text-right font-mono">
+                        {totals.subcontracts.count}
+                      </td>
+                      <td className="border p-2 text-right font-mono">$0</td>
+                      <td className="border p-2 text-right font-mono">0</td>
                       <td className="border p-2 text-right font-mono">
                         {totals.primeContracts.amount > 0 
                           ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
@@ -271,6 +308,14 @@ const Reports = () => {
                       <td className="border p-2 text-right font-mono">
                         {totals.subcontracts.count}
                       </td>
+                      <td className="border p-2 text-right font-mono">
+                        {formatCurrency(totals.subcontracts.amount)}
+                      </td>
+                      <td className="border p-2 text-right font-mono">
+                        {totals.subcontracts.count}
+                      </td>
+                      <td className="border p-2 text-right font-mono">$0</td>
+                      <td className="border p-2 text-right font-mono">0</td>
                       <td className="border p-2 text-right font-mono">
                         {totals.primeContracts.amount > 0 
                           ? `${((totals.subcontracts.amount / totals.primeContracts.amount) * 100).toFixed(2)}%`
