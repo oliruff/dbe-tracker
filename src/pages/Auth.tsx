@@ -28,12 +28,15 @@ const Auth = memo(() => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted"); // Log form submission
     setIsLoading(true);
     try {
       const { error } = isSignUp
         ? await supabase.auth.signUp({ email, password })
         : await supabase.auth.signIn({ email, password });
       
+      console.log("Sign-up error:", error); // Log Supabase error
+
       if (error) {
         toast({ title: "Authentication Error", description: error.message, variant: "destructive" });
         throw error; 
