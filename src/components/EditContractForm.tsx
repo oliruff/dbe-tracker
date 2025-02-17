@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import type { Contract, Subgrant } from "@/types/contracts";
 
-export const EditContractForm = () => {
+export const EditContractForm = memo(() => {
   const { contractId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -68,8 +67,16 @@ export const EditContractForm = () => {
     }
   }, [contract]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.tadProjectNumber || !formData.contractNumber) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       const { error: contractError } = await supabase
         .from("contracts")
@@ -118,16 +125,16 @@ export const EditContractForm = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [formData, queryClient, toast, navigate]);
 
-  const handleSubgrantChange = (index: number, field: keyof Subgrant, value: any) => {
+  const handleSubgrantChange = useCallback((index: number, field: keyof Subgrant, value: any) => {
     const updatedSubgrants = [...subgrants];
     updatedSubgrants[index] = {
       ...updatedSubgrants[index],
       [field]: value,
     };
     setSubgrants(updatedSubgrants);
-  };
+  }, [subgrants]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -381,4 +388,4 @@ export const EditContractForm = () => {
       </form>
     </Card>
   );
-};
+});
