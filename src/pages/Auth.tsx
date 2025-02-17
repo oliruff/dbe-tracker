@@ -33,7 +33,11 @@ const Auth = memo(() => {
       const { error } = isSignUp
         ? await supabase.auth.signUp({ email, password })
         : await supabase.auth.signIn({ email, password });
-      if (error) throw error;
+      
+      if (error) {
+        toast({ title: "Authentication Error", description: error.message, variant: "destructive" });
+        throw error; 
+      }
       navigate(location.state?.from || "/");
     } catch (error) {
       toast({ title: "Error", description: (error as Error).message, variant: "destructive" });
