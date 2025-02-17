@@ -28,24 +28,43 @@ const Auth = memo(() => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted"); // Log form submission
     setIsLoading(true);
-    try {
-      const { error } = isSignUp
-        ? await supabase.auth.signUp({ email, password })
-        : await supabase.auth.signIn({ email, password });
-      
-      console.log("Sign-up error:", error); // Log Supabase error
 
-      if (error) {
-        toast({ title: "Authentication Error", description: error.message, variant: "destructive" });
-        throw error; 
-      }
-      navigate(location.state?.from || "/");
+    // Validation for sign-up
+    if (isSignUp) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
+        if (!emailRegex.test(email)) {
+            toast({ title: "Invalid Email", description: "Please enter a valid email address.", variant: "destructive" });
+            setIsLoading(false);
+            return;
+        }
+
+        const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if (!passwordRequirements.test(password)) {
+            toast({ title: "Weak Password", description: "Password must be at least 6 characters long and include uppercase, lowercase, digits, and symbols.", variant: "destructive" });
+            setIsLoading(false);
+            return;
+        }
+    }
+
+    try {
+        const { error } = isSignUp
+            ? await supabase.auth.signUp({ email, password })
+            : await supabase.auth.signIn({ email, password });
+
+        if (error) {
+            if (error.message.includes("User not found")) {
+                toast({ title: "No Account", description: "No account found with this email. Please sign up.", variant: "destructive" });
+            } else {
+                toast({ title: "Authentication Error", description: error.message, variant: "destructive" });
+            }
+            throw error;
+        }
+        navigate(location.state?.from || "/");
     } catch (error) {
-      toast({ title: "Error", description: (error as Error).message, variant: "destructive" });
+        toast({ title: "Error", description: (error as Error).message, variant: "destructive" });
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
   };
 
