@@ -1,12 +1,11 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const Auth = () => {
+const Auth = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -15,53 +14,29 @@ const Auth = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Clear any invalid session state on component mount
     const checkAndClearSession = async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error?.message?.includes("Invalid Refresh Token") || error?.message?.includes("token not found")) {
-        // If there's an invalid token, sign out to clear the state
-        await supabase.auth.signOut();
-      } else if (session) {
-        // If we have a valid session, redirect
-        const from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      }
+      if (session) {
+        navigate("/");
       }
     };
-
     checkAndClearSession();
-  }, [navigate, location]);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // First, ensure we're starting with a clean state
-      await supabase.auth.signOut();
-
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
-          },
-        });
-        if (error) throw error;
-        toast.success("Check your email to confirm your account");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        const from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
-      }
-    } catch (error: any) {
-      console.error("Auth error:", error);
-      toast.error(error.message || "An error occurred during authentication");
+      const { error } = isSignUp
+        ? await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signIn({ email, password });
+      if (error) throw error;
+      navigate(location.state?.from || "/");
+    } catch (error) {
+      toast({ title: "Error", description: (error as Error).message, variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
@@ -131,6 +106,6 @@ const Auth = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Auth;

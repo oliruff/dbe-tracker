@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Printer, Download } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -10,11 +10,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency } from "@/lib/format";
 import type { Contract } from "@/types/contracts";
 
-const Reports = () => {
+const Reports = memo(() => {
   const [reportPeriod, setReportPeriod] = useState<string>("annual");
   const [selectedContracts, setSelectedContracts] = useState<string[]>([]);
 
-  const { data: contracts, isLoading } = useQuery({
+  const { data: contracts, isLoading, error } = useQuery({
     queryKey: ["contracts"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -173,6 +173,14 @@ const Reports = () => {
   const handlePrint = () => {
     window.print();
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching contracts: {error.message}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -633,6 +641,6 @@ const Reports = () => {
       </main>
     </div>
   );
-};
+});
 
 export default Reports;
