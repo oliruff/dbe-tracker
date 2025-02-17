@@ -17,7 +17,7 @@ const Auth = memo(() => {
     const checkAndClearSession = async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
-        toast({ title: "Error", description: error.message, variant: "destructive" });
+        toast.error(error.message);
       }
       if (session) {
         navigate("/");
@@ -34,14 +34,14 @@ const Auth = memo(() => {
     if (isSignUp) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
         if (!emailRegex.test(email)) {
-            toast({ title: "Invalid Email", description: "Please enter a valid email address.", variant: "destructive" });
+            toast.error("Please enter a valid email address.");
             setIsLoading(false);
             return;
         }
 
         const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
         if (!passwordRequirements.test(password)) {
-            toast({ title: "Weak Password", description: "Password must be at least 6 characters long and include uppercase, lowercase, digits, and symbols.", variant: "destructive" });
+            toast.error("Password must be at least 6 characters long and include uppercase, lowercase, digits, and symbols.");
             setIsLoading(false);
             return;
         }
@@ -50,19 +50,19 @@ const Auth = memo(() => {
     try {
         const { error } = isSignUp
             ? await supabase.auth.signUp({ email, password })
-            : await supabase.auth.signIn({ email, password });
+            : await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
             if (error.message.includes("User not found")) {
-                toast({ title: "No Account", description: "No account found with this email. Please sign up.", variant: "destructive" });
+                toast.error("No account found with this email. Please sign up.");
             } else {
-                toast({ title: "Authentication Error", description: error.message, variant: "destructive" });
+                toast.error(error.message);
             }
             throw error;
         }
         navigate(location.state?.from || "/");
     } catch (error) {
-        toast({ title: "Error", description: (error as Error).message, variant: "destructive" });
+        toast.error((error as Error).message);
     } finally {
         setIsLoading(false);
     }
